@@ -1,19 +1,42 @@
 #ifndef MAZE
 #define MAZE 
 #include <Define.h>
-#include <recursiveBackTracker.h>
+#include <GraphUtility.h>
 class Maze{
 	public:
-		pair<int,int> enemysCord;
+		pair<int,int> *enemysCord;
 		pair<int,int> playerCord;
+		int numEnemys;
+		pair<int, int> endCord;
+
 		Maze(){}
 
-		void initMaze(int mapSize){
+		void initMaze(int mapSize, int numEnemys){
+			this->numEnemys = numEnemys;
 			this->mapSize = mapSize;
-			InitMap();
+			enemysCord = new pair<int, int>[this->numEnemys];
+	
+			InitMap();	
 			InitGraph();
+			initCord();
+		};
+
+		void initCord(){
+
+			this->playerCord = make_pair( 2*(rand() % this->graphMap->get_num_nodes()),0);
+			endCord = make_pair( 2*(rand() % this->graphMap->get_num_nodes()),2*(this->mapSize - 1));
+
+			for(int i = 0; i< numEnemys ; i++)
+				this->enemysCord[i] = make_pair(2*(rand() % this->graphMap->get_num_nodes()), 2*(rand() % this->graphMap->get_num_nodes()));
 
 		};
+
+		void restarMaze(){
+			InitMap();
+			InitGraph();
+			initCord();
+
+		}
 		
 		~Maze(){
 
@@ -39,13 +62,11 @@ class Maze{
 		}
 
 		DynList<pair<int,int> > CordPath(pair<int,int> start, pair<int,int> End){
-			//cout << "star(" << start.first << ',' << start.second << ')' << endl;
-			//cout << "end(" << End.first << ',' << End.second << ')' << endl;
+
 
 			auto ArcStart = cordToArc(start, this->graphMap);
 			auto ArcEnd = cordToArc(End, this->graphMap);
 			auto list = arcToCord(this->makeBriefPath(ArcStart.first, ArcEnd.first), this->graphMap);
-			//cout << "first(" << list.get_first().first << ',' << list.get_first().second << ')' << endl;
 			if(ArcStart.second == 1)
 				if(list.get_first().second > start.second)
 					list.remove_first();
@@ -127,6 +148,7 @@ class Maze{
 			}
 			delete[] this->map;
 			clear_graph(*this->graphMap);
+			delete this->enemysCord;
 		}
 
 		
@@ -156,6 +178,7 @@ class Maze{
 
 		void InitGraph(){
 			this->graphMap = new Graph();
+			
 			for (int i = 0; i < this->mapSize; ++i){
 				this->graphMap->insert_node(i);
 				
@@ -167,10 +190,10 @@ class Maze{
 					//cout << "info " << info.str() << endl;
 					arcData data(info.str());
 					this->graphMap->insert_arc(it.get_curr(), it2.get_curr(), data );
-					enemysCord.first = 2*it2.get_curr()->get_info();
-					enemysCord.second = 2*it.get_curr()->get_info();
 				}
 			}
+
+		
 
 		}
 

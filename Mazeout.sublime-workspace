@@ -5,23 +5,107 @@
 		[
 			[
 				"sta",
-				"stateX"
+				"stateY"
+			],
+			[
+				"Cor",
+				"cord"
+			],
+			[
+				"ene",
+				"enemyPaint"
+			],
+			[
+				"gam",
+				"gamenemy"
+			],
+			[
+				"ga",
+				"gameplayer"
+			],
+			[
+				"wa",
+				"walkLeft"
+			],
+			[
+				"me",
+				"MenuMultiplayer"
+			],
+			[
+				"MenuM",
+				"MenuMultiplayer"
+			],
+			[
+				"G",
+				"gotera"
+			],
+			[
+				"MenuJ",
+				"MenuJugar"
+			],
+			[
+				"mo",
+				"mouse"
+			],
+			[
+				"maz",
+				"maze"
+			],
+			[
+				"game",
+				"gameplayer"
+			],
+			[
+				"al_des",
+				"al_destroy_timer"
+			],
+			[
+				"map",
+				"mapSize"
+			],
+			[
+				"ma",
+				"mapSize"
+			],
+			[
+				"nu",
+				"numEnemys"
+			],
+			[
+				"Nu",
+				"NumPeople"
+			],
+			[
+				"Game",
+				"gamenemy"
+			],
+			[
+				"stat",
+				"stateY"
+			],
+			[
+				"gra",
+				"gameplayer"
+			],
+			[
+				"star",
+				"starXpointEnemy"
+			],
+			[
+				"starYpointe",
+				"starYpointPlayer"
+			],
+			[
+				"make",
+				"make_pair"
+			],
+			[
+				"pri",
+				"primeraparte"
 			],
 			[
 				"st",
 				"stateY"
-			],
-			[
-				"gam",
-				"gameplayer"
-			],
-			[
-				"ma",
-				"mazeGame"
-			],
-			[
-				"ene",
-				"enemy"
 			],
 			[
 				"inc",
@@ -56,14 +140,6 @@
 				"ArcEnd"
 			],
 			[
-				"G",
-				"Graph"
-			],
-			[
-				"game",
-				"gameplayer"
-			],
-			[
 				"move",
 				"moveAnimation"
 			],
@@ -96,14 +172,6 @@
 				"mazeGame"
 			],
 			[
-				"mo",
-				"moveList"
-			],
-			[
-				"ga",
-				"gamenemy"
-			],
-			[
 				"sor",
 				"source"
 			],
@@ -134,10 +202,6 @@
 			[
 				"D",
 				"DynList"
-			],
-			[
-				"make",
-				"makeDepth"
 			],
 			[
 				"i",
@@ -216,10 +280,6 @@
 				"stateX"
 			],
 			[
-				"map",
-				"mapsize"
-			],
-			[
 				"mong",
 				"mongoURL"
 			],
@@ -256,10 +316,6 @@
 				"doexit"
 			],
 			[
-				"maz",
-				"mazeSize"
-			],
-			[
 				"for",
 				"for\tFor Loop"
 			],
@@ -278,10 +334,6 @@
 			[
 				"rec",
 				"recursiveBackTracker.h"
-			],
-			[
-				"gra",
-				"graphMap"
 			],
 			[
 				"fina",
@@ -318,10 +370,6 @@
 			[
 				"target",
 				"targetOrig"
-			],
-			[
-				"pri",
-				"PrintMap"
 			],
 			[
 				"m",
@@ -466,54 +514,6 @@
 			[
 				"ba",
 				"background-size\tstyl"
-			],
-			[
-				"v",
-				"valide"
-			],
-			[
-				"pedid",
-				"pedido"
-			],
-			[
-				"pedido",
-				"pedidoValid"
-			],
-			[
-				"Va",
-				"Vainilla"
-			],
-			[
-				"Pri",
-				"Prices"
-			],
-			[
-				"bord",
-				"border\tstyl"
-			],
-			[
-				"mari",
-				"margin-top\tstyl"
-			],
-			[
-				"sy",
-				"font-style\tstyl"
-			],
-			[
-				"fun",
-				"function"
-			],
-			[
-				"inde",
-				"indexMax"
-			],
-			[
-				"gt",
-				"get\t.get()"
-			],
-			[
-				"pedi",
-				"pedidoSchemaJSON"
 			]
 		]
 	},
@@ -523,7 +523,7 @@
 			"file": "MazeGenerator/maze.h",
 			"settings":
 			{
-				"buffer_size": 4305,
+				"buffer_size": 4593,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -532,7 +532,7 @@
 			"file": "MazeOut.cpp",
 			"settings":
 			{
-				"buffer_size": 1158,
+				"buffer_size": 1699,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -541,13 +541,22 @@
 			"file": "MazeGenerator/GameDefine.h",
 			"settings":
 			{
-				"buffer_size": 8413,
+				"buffer_size": 24859,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "MazeGenerator/recursiveBackTracker.h",
+			"file": "MazeGenerator/Define.h",
+			"settings":
+			{
+				"buffer_size": 94,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "MazeGenerator/GraphUtility.h",
 			"settings":
 			{
 				"buffer_size": 8495,
@@ -703,11 +712,14 @@
 	},
 	"expanded_folders":
 	[
-		"/home/mator/programacion/c++/Ayda/Proyecto/Mazeout",
-		"/home/mator/programacion/c++/Ayda/Proyecto/Mazeout/MazeGenerator"
+		"/home/mator/programacion/c++/Ayda/MazeOut",
+		"/home/mator/programacion/c++/Ayda/MazeOut/MazeGenerator",
+		"/home/mator/programacion/c++/Ayda/MazeOut/Resources"
 	],
 	"file_history":
 	[
+		"/home/mator/programacion/c++/Ayda/MazeOut/Resources/FondoMenu.png",
+		"/home/mator/programacion/c++/Ayda/MazeOut/MazeOut.cpp",
 		"/home/mator/programacion/c++/Ayda/Proyecto/Mazeout/Makefile",
 		"/home/mator/programacion/c++/Ayda/Proyecto/Mazeout/MazeGenerator/Define.h",
 		"/home/mator/programacion/c++/Ayda/Proyecto/Mazeout/MazeGenerator/GraphDefine.H",
@@ -833,13 +845,11 @@
 		"/home/mator/programacion/JavaScript/Node/Practicas/sweetstemptationsmerida/package.json",
 		"/home/mator/programacion/JavaScript/Node/sweetstemptationsmerida/views/galery/cakes.jade",
 		"/home/mator/programacion/JavaScript/Node/sweetstemptationsmerida/Public/stylus/app.styl",
-		"/home/mator/programacion/JavaScript/Node/sweetstemptationsmerida/Public/javaScript/eventNewAdmin.js",
-		"/home/mator/programacion/JavaScript/Node/sweetstemptationsmerida/Public/javaScript/eventStateApp.js",
-		"/home/mator/programacion/JavaScript/Node/sweetstemptationsmerida/views/admin/pedidos/preShow.jade"
+		"/home/mator/programacion/JavaScript/Node/sweetstemptationsmerida/Public/javaScript/eventNewAdmin.js"
 	],
 	"find":
 	{
-		"height": 26.0
+		"height": 63.0
 	},
 	"find_in_files":
 	{
@@ -853,6 +863,35 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"stateX",
+			"second",
+			"state",
+			"0.1",
+			"0.5",
+			"10.0",
+			"playerPaint",
+			"gameplayer",
+			"Niño",
+			"gameplayer",
+			"Primeraparte",
+			"-1",
+			"Menu",
+			"enemyPaint",
+			"gamenemy",
+			"enemyPaint",
+			"gamenemy",
+			"mazeGame",
+			"gamenemy[i]->",
+			"gamenemy",
+			"gamenemy[i]->",
+			"BitMap",
+			"gamenemy[i]",
+			"gamenemy.",
+			"gamenemy",
+			"gameplayer",
+			"gamenemy",
+			"30",
+			"primeraparte",
 			"stateX",
 			"second",
 			"get_first",
@@ -924,15 +963,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4305,
+						"buffer_size": 4593,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1673,
-								1673
+								1160,
+								1160
 							]
 						],
 						"settings":
@@ -941,7 +980,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1008.0,
+						"translation.y": 832.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
@@ -953,15 +992,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1158,
+						"buffer_size": 1699,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								67,
-								67
+								127,
+								127
 							]
 						],
 						"settings":
@@ -970,7 +1009,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 240.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -982,15 +1021,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8413,
+						"buffer_size": 24859,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6331,
-								6331
+								2524,
+								2524
 							]
 						],
 						"settings":
@@ -999,7 +1038,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 3699.0,
+						"translation.y": 1283.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -1007,7 +1046,35 @@
 				},
 				{
 					"buffer": 3,
-					"file": "MazeGenerator/recursiveBackTracker.h",
+					"file": "MazeGenerator/Define.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 94,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								52,
+								60
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "MazeGenerator/GraphUtility.h",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1018,8 +1085,8 @@
 						"selection":
 						[
 							[
-								8485,
-								8485
+								2972,
+								3005
 							]
 						],
 						"settings":
@@ -1031,11 +1098,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 5,
 					"file": "MazeGenerator/GraphDefine.H",
 					"semi_transient": false,
 					"settings":
@@ -1056,10 +1123,10 @@
 							"syntax": "Packages/C++/C++.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 48.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 5,
 					"type": "text"
 				}
 			]
@@ -1434,7 +1501,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 192.0,
+	"side_bar_width": 430.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
