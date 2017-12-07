@@ -151,12 +151,12 @@ class gamePlayer: public gameEntity{
                 this->walkLeft = al_load_bitmap("./Resources/PrimerNivel/Niño_CaminandoIzq.png");
                 this->up = al_load_bitmap("./Resources/PrimerNivel/Niño_Espalda.png");
             }else if(i == 1){
-                this->BitMap = al_load_bitmap("./Resources/PrimerNivel/Niño_Frente.png");
-                this->left = al_load_bitmap("./Resources/PrimerNivel/Niño_Izquierda.png");
-                this->right = al_load_bitmap("./Resources/PrimerNivel/Niño_Derecha.png");
-                this->walkRight = al_load_bitmap("./Resources/PrimerNivel/Niño_CaminandoDer.png");
-                this->walkLeft = al_load_bitmap("./Resources/PrimerNivel/Niño_CaminandoIzq.png");
-                this->up = al_load_bitmap("./Resources/PrimerNivel/Niño_Espalda.png");
+                this->BitMap = al_load_bitmap("./Resources/SegundoNivel/Psycho_lvl2_F.png");
+                this->left = al_load_bitmap("./Resources/SegundoNivel/Psycho_lvl2_L3.png");
+                this->right = al_load_bitmap("./Resources/SegundoNivel/Psycho_lvl2_R3.png");
+                this->walkRight = al_load_bitmap("./Resources/SegundoNivel/Psycho_lvl2_R1.png");
+                this->walkLeft = al_load_bitmap("./Resources/SegundoNivel/Psycho_lvl2_L1.png.png");
+                this->up = al_load_bitmap("./Resources/SegundoNivel/Psycho_lvl2_B.png");
 
             }else{
                 this->BitMap = al_load_bitmap("./Resources/PrimerNivel/Niño_Frente.png");
@@ -291,23 +291,31 @@ class gamePeople: public gameEntity{
 
 class Objects{
 public:
-    ALLEGRO_BITMAP *C[5];
-    bool taken[5];
-    pair<int, int> ObjectsCord[5];
+    ALLEGRO_BITMAP *C[10];
+    bool taken[10];
+    pair<int, int> ObjectsCord[10];
     int HowLeft;
+    int HowLeftMult;
     Objects(){    
-        HowLeft = 5;   
+        HowLeft = 5; 
+        HowLeftMult = 5;     
     }
     void set_BitMaps(){
-          for (int i = 1; i < 6; ++i){
+        for (int i = 1; i < 6; ++i){
             C[i-1] = al_load_bitmap(("./Resources/SegundoNivel/C"+to_string(i)+".png").c_str());
             if(!C[i-1])
                 cout << "bitmap object no listo"<<  "./Resources/SegundoNivel/C"+to_string(i)+".png"<< endl;
             taken[i-1] = false;
-        }
+        }  
+        for (int i = 1; i < 6; ++i){
+            C[i+4] = al_load_bitmap(("./Resources/SegundoNivel/C"+to_string(i)+".png").c_str());
+            if(!C[i+4])
+                cout << "bitmap object no listo"<<  "./Resources/SegundoNivel/C"+to_string(i)+".png"<< endl;
+            taken[i+4] = false;
+        }    
     }
     void setObjectsCord(pair<int,int> cord[]){
-        for(int i=0 ;i<5;i++)
+        for(int i=0 ;i<10;i++)
             ObjectsCord[i] = cord[i];
     }
 
@@ -315,12 +323,19 @@ public:
 
         HowLeft--;
     }
+    void find_objectMult(){
+
+        HowLeft--;
+    }
 
     bool is_ready(){
         return (HowLeft == 0);
     }
+    bool is_readyMult(){
+        return (HowLeft == 0);
+    }
     ~Objects(){
-        for (int i = 1; i < 6; ++i)
+        for (int i = 0; i < 10; ++i)
             al_destroy_bitmap(C[i]);
         
     }
@@ -334,15 +349,17 @@ class Game{
 		int FPS = 2;
 		int numEnemys;
 		int numPeople,numObjects;
+        int PeopleLeft, PeopleLeftMulti;
         bool NeedPeople;
         bool NeedEnemys, NeedObjects;
         Objects gameObject;
 		Maze maze;
 		ALLEGRO_DISPLAY *display;
 		ALLEGRO_BITMAP *wall, *graund, *Menu, *MenuJugar,  *MenuArcade, *MenuMultiplayer, *MenuSalir;
+        ALLEGRO_BITMAP *Loss, *win;
 		gamePlayer gameplayer, gameMulti;
 		gameEnemy *gamenemy;
-        gamePeople gamepeople[4];
+        gamePeople gamepeople[8];
 		ALLEGRO_EVENT_QUEUE *event_queue;
 		ALLEGRO_TIMER *timer;
 		ALLEGRO_SAMPLE *gotera;
@@ -391,29 +408,49 @@ class Game{
 			for (int i = 0; i < this->numEnemys; ++i)
 				if(pow(this->gameplayer.stateX - this->gamenemy[i].stateX, 2) + pow(this->gameplayer.stateY - this->gamenemy[i].stateY, 2) < pow(this->gamenemy[i].rad,2))
 					this->gamenemy[i].moveAnimation();
+          /*  for (int i =  this->numEnemys; i < 2*this->numEnemys; ++i)
+                if(pow(this->gameplayer.stateX - this->gamenemy[i].stateX, 2) + pow(this->gameplayer.stateY - this->gamenemy[i].stateY, 2) < pow(this->gamenemy[i].rad,2))
+                    this->gamenemy[i].moveAnimation();*/
 		}
 
-        void PeopleMove(){
+        void PeopleMove(bool multiPlayerstate){
               
             for (int i = 0; i < numPeople; ++i)
+                    this->gamepeople[i].moveAnimation();
+
+            if(multiPlayerstate)
+                for (int i = numPeople; i < 2*numPeople; ++i)
                     this->gamepeople[i].moveAnimation();
                 
         }
 
-        void PeopleChange(){
+        void PeopleChange(bool multiPlayerstate){
               
             for (int i = 0; i < numPeople; ++i)
-                    if(this->gamepeople[i].stateX == this->gameplayer.stateX and this->gamepeople[i].stateY == this->gameplayer.stateY and this->gamepeople[i].Efect and this->gameObject.is_ready())
+                    if(this->gamepeople[i].stateX == this->gameplayer.stateX and this->gamepeople[i].stateY == this->gameplayer.stateY and this->gamepeople[i].Efect and (this->gameObject.is_ready() || !this->NeedObjects)){
                         this->gamepeople[i].changeState();
-                
+                        this->PeopleLeft--;
+                    }
+            if(multiPlayerstate)        
+                 for (int i = numPeople; i < 2*numPeople; ++i)
+                    if(this->gamepeople[i].stateX == this->gameMulti.stateX and this->gamepeople[i].stateY == this->gameMulti.stateY and this->gamepeople[i].Efect and (this->gameObject.is_readyMult() || !this->NeedObjects)){
+                        this->gamepeople[i].changeState();
+                        this->PeopleLeftMulti--;
+                    }
         }
 
-        void objectFind(){
+        void objectFind(bool multiPlayerstate){
               
-            for (int i = 0; i < numObjects; ++i)
+            for (int i = 0; i < numObjects/2; ++i)
                     if(this->gameObject.ObjectsCord[i].second == this->gameplayer.stateX and this->gameObject.ObjectsCord[i].first == this->gameplayer.stateY and !this->gameObject.taken[i]){
                         this->gameObject.taken[i] = true;
                         this->gameObject.find_object();
+                    }
+            if(multiPlayerstate)
+                for (int i = numObjects/2; i < numObjects; ++i)
+                    if(this->gameObject.ObjectsCord[i].second == this->gameMulti.stateX and this->gameObject.ObjectsCord[i].first == this->gameMulti.stateY and !this->gameObject.taken[i]){
+                        this->gameObject.taken[i] = true;
+                        this->gameObject.find_objectMult();
                     }
                 
         }
@@ -422,14 +459,15 @@ class Game{
 
 			for (int i = 0; i < this->numEnemys; ++i)
 				this->gamenemy[i].setmoveList(this->maze,this->gameplayer);
-            
+            for (int i =this->numEnemys; i <2*this->numEnemys ; ++i)
+                this->gamenemy[i].setmoveList(this->maze,this->gameMulti);
 		}
 		
 
 		bool init(int NumEnemys){
 			this->numEnemys = NumEnemys;
 			this->numPeople = 4;
-            this->numObjects = 5;
+            this->numObjects = 10;
             this->NeedObjects = true;
             this->NeedEnemys = false;
             this->NeedPeople = true;
@@ -646,41 +684,89 @@ class Game{
 				al_draw_bitmap_region(ActualPlayerPint.left,0,0, resourceSize,  resourceSize, playerPaint.second+ Move,  playerPaint.first , 0);
 			if(ActualPlayerPint.state == 3)
 				al_draw_bitmap_region(ActualPlayerPint.right,0,0, resourceSize,  resourceSize, playerPaint.second+ Move,  playerPaint.first , 0);
-            if(NeedEnemys)  
-    			for (int i = 0; i < this->numEnemys; ++i){
-    				if(this->gamenemy[i].stateX + 1 >= xStart and this->gamenemy[i].stateX + 1 < xEnd and this->gamenemy[i].stateY + 1 >= yStart  and this->gamenemy[i].stateY + 1 <yEnd){
-    					if(gamenemy[i].state == 0)
-    						al_draw_bitmap_region(gamenemy[i].BitMap,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
-    					if(gamenemy[i].state == 1)
-    						al_draw_bitmap_region(gamenemy[i].up,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
-    					if(gamenemy[i].state == 2)
-    						al_draw_bitmap_region(gamenemy[i].left,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
-    					if(gamenemy[i].state == 3)
-    						al_draw_bitmap_region(gamenemy[i].right,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
-    				}
-    			}	
-         
-            if(NeedPeople)
-                for (int i = 0; i < this->numPeople; ++i){
-                    if(this->gamepeople[i].stateX + 1 >= xStart and this->gamepeople[i].stateX + 1 < xEnd and this->gamepeople[i].stateY + 1 >= yStart  and this->gamepeople[i].stateY + 1 <yEnd){
-                        if(gamepeople[i].state == 0)
-                            al_draw_bitmap_region(gamepeople[i].BitMap,0,0, resourceSize,  resourceSize, peoplePaint[i].second+ Move,  peoplePaint[i].first , 0);
-                        if(gamepeople[i].state == 1)
-                            al_draw_bitmap_region(gamepeople[i].up,0,0, resourceSize,  resourceSize, peoplePaint[i].second+ Move,  peoplePaint[i].first , 0);
-                        if(gamepeople[i].state == 2)
-                            al_draw_bitmap_region(gamepeople[i].left,0,0, resourceSize,  resourceSize, peoplePaint[i].second+ Move,  peoplePaint[i].first , 0);
-                        if(gamepeople[i].state == 3)
-                            al_draw_bitmap_region(gamepeople[i].right,0,0, resourceSize,  resourceSize, peoplePaint[i].second+ Move,  peoplePaint[i].first , 0);
+            if(NeedEnemys){
+                if(ActualPlayerPint.type){
+                    for (int i = 0; i < this->numEnemys; ++i){
+                        if(this->gamenemy[i].stateX + 1 >= xStart and this->gamenemy[i].stateX + 1 < xEnd and this->gamenemy[i].stateY + 1 >= yStart  and this->gamenemy[i].stateY + 1 <yEnd){
+                            if(gamenemy[i].state == 0)
+                                al_draw_bitmap_region(gamenemy[i].BitMap,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
+                            if(gamenemy[i].state == 1)
+                                al_draw_bitmap_region(gamenemy[i].up,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
+                            if(gamenemy[i].state == 2)
+                                al_draw_bitmap_region(gamenemy[i].left,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
+                            if(gamenemy[i].state == 3)
+                                al_draw_bitmap_region(gamenemy[i].right,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
+                        }
                     }
-                } 
+                }else{
+                    for (int i = this->numEnemys; i < 2*this->numEnemys; ++i){
+                        if(this->gamenemy[i].stateX + 1 >= xStart and this->gamenemy[i].stateX + 1 < xEnd and this->gamenemy[i].stateY + 1 >= yStart  and this->gamenemy[i].stateY + 1 <yEnd){
+                            if(gamenemy[i].state == 0)
+                                al_draw_bitmap_region(gamenemy[i].BitMap,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
+                            if(gamenemy[i].state == 1)
+                                al_draw_bitmap_region(gamenemy[i].up,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
+                            if(gamenemy[i].state == 2)
+                                al_draw_bitmap_region(gamenemy[i].left,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
+                            if(gamenemy[i].state == 3)
+                                al_draw_bitmap_region(gamenemy[i].right,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
+                        }
+                    }
 
-            if(NeedObjects)
-                for (int i = 0; i < this->numObjects; ++i){
-                    if(this->gameObject.ObjectsCord[i].second + 1 >= xStart and this->gameObject.ObjectsCord[i].second + 1 < xEnd and this->gameObject.ObjectsCord[i].first + 1 >= yStart  and this->gameObject.ObjectsCord[i].first + 1 <yEnd){
-                            if(!gameObject.taken[i])
-                                al_draw_bitmap_region(gameObject.C[i],0,0, resourceSize,  resourceSize, objectPaints[i].second+ Move,  objectPaints[i].first , 0);
-                    }
                 } 
+            }  
+    			
+         
+            if(NeedPeople){
+                if(ActualPlayerPint.type){
+                    for (int i = 0; i < this->numPeople; ++i){
+                        if(this->gamepeople[i].stateX + 1 >= xStart and this->gamepeople[i].stateX + 1 < xEnd and this->gamepeople[i].stateY + 1 >= yStart  and this->gamepeople[i].stateY + 1 <yEnd){
+                            if(gamepeople[i].state == 0)
+                                al_draw_bitmap_region(gamepeople[i].BitMap,0,0, resourceSize,  resourceSize, peoplePaint[i].second+ Move,  peoplePaint[i].first , 0);
+                            if(gamepeople[i].state == 1)
+                                al_draw_bitmap_region(gamepeople[i].up,0,0, resourceSize,  resourceSize, peoplePaint[i].second+ Move,  peoplePaint[i].first , 0);
+                            if(gamepeople[i].state == 2)
+                                al_draw_bitmap_region(gamepeople[i].left,0,0, resourceSize,  resourceSize, peoplePaint[i].second+ Move,  peoplePaint[i].first , 0);
+                            if(gamepeople[i].state == 3)
+                                al_draw_bitmap_region(gamepeople[i].right,0,0, resourceSize,  resourceSize, peoplePaint[i].second+ Move,  peoplePaint[i].first , 0);
+                        }
+                    } 
+                }else{
+                    for (int i = this->numPeople; i < 2*this->numPeople; ++i){
+                        if(this->gamepeople[i].stateX + 1 >= xStart and this->gamepeople[i].stateX + 1 < xEnd and this->gamepeople[i].stateY + 1 >= yStart  and this->gamepeople[i].stateY + 1 <yEnd){
+                            if(gamepeople[i].state == 0)
+                                al_draw_bitmap_region(gamepeople[i].BitMap,0,0, resourceSize,  resourceSize, peoplePaint[i].second+ Move,  peoplePaint[i].first , 0);
+                            if(gamepeople[i].state == 1)
+                                al_draw_bitmap_region(gamepeople[i].up,0,0, resourceSize,  resourceSize, peoplePaint[i].second+ Move,  peoplePaint[i].first , 0);
+                            if(gamepeople[i].state == 2)
+                                al_draw_bitmap_region(gamepeople[i].left,0,0, resourceSize,  resourceSize, peoplePaint[i].second+ Move,  peoplePaint[i].first , 0);
+                            if(gamepeople[i].state == 3)
+                                al_draw_bitmap_region(gamepeople[i].right,0,0, resourceSize,  resourceSize, peoplePaint[i].second+ Move,  peoplePaint[i].first , 0);
+                        }
+                    } 
+                }
+               
+            }
+                
+
+            if(NeedObjects){
+                if(ActualPlayerPint.type){
+                    for (int i = 0; i < this->numObjects/2; ++i){
+                        if(this->gameObject.ObjectsCord[i].second + 1 >= xStart and this->gameObject.ObjectsCord[i].second + 1 < xEnd and this->gameObject.ObjectsCord[i].first + 1 >= yStart  and this->gameObject.ObjectsCord[i].first + 1 <yEnd){
+                                if(!gameObject.taken[i])
+                                    al_draw_bitmap_region(gameObject.C[i],0,0, resourceSize,  resourceSize, objectPaints[i].second+ Move,  objectPaints[i].first , 0);
+                        }
+                    }
+                }else{
+
+                     for (int i = this->numObjects/2; i < this->numObjects; ++i){
+                        if(this->gameObject.ObjectsCord[i].second + 1 >= xStart and this->gameObject.ObjectsCord[i].second + 1 < xEnd and this->gameObject.ObjectsCord[i].first + 1 >= yStart  and this->gameObject.ObjectsCord[i].first + 1 <yEnd){
+                                if(!gameObject.taken[i])
+                                    al_draw_bitmap_region(gameObject.C[i],0,0, resourceSize,  resourceSize, objectPaints[i].second+ Move,  objectPaints[i].first , 0);
+                        }
+                    }
+                }
+            }
+
 		}
 
 		void enemyMovePaint(){
@@ -841,10 +927,11 @@ class Game{
 		}
 
 		bool isEndGame(){
+            
 
-			for (int i = 0; i < this->numEnemys; ++i)
+			for(int i = 0; i < this->numEnemys; ++i)
 				if(gamenemy[i].stateX == gameplayer.stateX and  gamenemy[i].stateY == gameplayer.stateY and this->NeedEnemys ){
-					return true;
+					return false;
 				}
 
 			return false;
@@ -852,7 +939,20 @@ class Game{
 
 		
 
-		bool winnigGame(){
+		int winnigGame(bool multiPlayerstate){
+            if(NeedObjects){
+                    if(!this->gameObject.is_ready() and !multiPlayerstate)
+                        return 0
+
+
+            }
+
+            if(NeedPeople){
+                if(!this->PeopleLeft != 0 and !multiPlayerstate)
+                    return 0
+
+            }
+            map[maze.endCord.first][maze.endCord.second] = ' ';
 			return(this->gameplayer.stateY == this->maze.endCord.first and this->gameplayer.stateX == this->maze.endCord.second );
 		}
 
@@ -946,32 +1046,153 @@ class Game{
 		}
 		int  HistoryMode(){
             
-			this->playVideo(this->Open);
-            for(int i = 0; i < 3; ++i){
-                
+			
+            for(int i = 0; i < 2; ++i){
+                initAssets(i);
+                this->playVideo(this->Open);
+                int result = this->playGame(0,i);
+                if(result == 1){
+                    al_draw_bitmap(Loss, 0, 0, 0);
+                    al_flip_display();
+                    while(true){
+                        ALLEGRO_EVENT ev;
+                        al_wait_for_event(this->event_queue, &ev);
+
+                        if (ev.type == ALLEGRO_EVENT_KEY_DOWN){
+                            if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER)
+                                break;
+                        }
+
+
+                    }
+                    return result;
+                }else if(result  == 2)
+                    return result;
+                al_draw_bitmap(win, 0, 0, 0);
+                al_flip_display();
+                while(true){
+                    ALLEGRO_EVENT ev;
+                    al_wait_for_event(this->event_queue, &ev);
+
+                    if (ev.type == ALLEGRO_EVENT_KEY_DOWN){
+                        if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER)
+                            break;
+                    }
+
+
+                }
+
 
             }
 
 			return 0;
 
 		}
-        void PlayNivel(int nivel){
 
+        int playGame(int type, int set){
 
-           /* if(nivel == 0){
+            if(type == 0){
+                if(set == 0)
+                    restarGame(mapsize,2,0,0,false,true,false,set);
+                else if(set ==1)
+                    restarGame(mapsize,0,4,10,true,false,true,set);
 
+            }else if(type == 1){
+                restarGame(mapsize,2,4,10,true,false,true,set);
+                al_resize_display(this->display,2*al_get_display_width(this->display), al_get_display_height(this->display));
+            }else if(type == 2){
+                restarGame(mapsize,0,4,10, 1 == rand()%2,1 == rand()%2,1 == rand()%2,rand()%2); 
+            }
+            al_start_timer(this->timer);
+            al_clear_to_color(al_map_rgb(0,0,0));
+            this->PaintMap(0, this->gameplayer);
+            if(type == 1)
+                this->PaintMap(resourceSize * mapsize, this->gameMulti);
+            al_flip_display();  
+            int times = 0;
+            while(true){
+                ALLEGRO_EVENT ev;
+                
+                al_wait_for_event(this->event_queue, &ev);
+                if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+                    return 2;
+                }else if(ev.type == ALLEGRO_EVENT_TIMER) {
+                       
+      
+                    if(this->winnigGame()){
+                       
+                        if(type ==2){
+                            restarGame(mapsize+2*times,2,4,10, 1 == rand()%2,1 == rand()%2,1 == rand()%2,rand()%2); 
+                            times++;
+                        }
+                        return 0;
+                    }
 
-            }else(nivel == 1){
+                    if(this->isEndGame()){
+                        return 1;
+                    }
+                    if(this->NeedEnemys)
+                        this->EnemysMove();
+                     
+                    if(this->NeedPeople){
+                        this->PeopleMove(type ==1);
+                        PeopleChange(type ==1);
+                    }
+                    if(this->NeedObjects){
+                        objectFind(type == 1);
+                    }
+                    //this->enemyMovePaint();
+                    
+                    //al_flip_display();
+                    //al_rest(0.05);    
+                    this->PaintMap(0, this->gameplayer);
+                    if(type == 1)
+                        this->PaintMap(resourceSize * mapsize, this->gameMulti);
+                    al_flip_display();  
+                    
 
+                }if(ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+                     if(this->winnigGame()){
+                       
+                        if(type ==2){
+                            restarGame(mapsize+2*times,2,4,10, 1 == rand()%2,1 == rand()%2,1 == rand()%2,rand()%2); 
+                            times++;
+                        }
+                        return 0;
+                    }
 
-
-            }if(nivel == 2){
-
-
-            }*/
+                    if(this->isEndGame()){
+                        return 1;
+                    }
+                    this->gameplayer.moveAnimation(ev);
+                    if(type == 1)
+                        this->gameMulti.moveAnimation(ev);
+                     
+                    if(this->NeedPeople){
+                        PeopleChange(type==1);
+                    }
+                    if(this->NeedObjects){
+                        objectFind(type == 1);
+                    }
+                  
+                    
+                    
+                    //this->playerMovePaint();
+                    //al_flip_display();
+                    //al_rest(0.05);    
+                    this->PaintMap(0, this->gameplayer);
+                    if(type == 1)
+                        this->PaintMap(resourceSize * mapsize, this->gameMulti);
+                    al_flip_display();  
+                        
+                    if(this->NeedEnemys)
+                        this->recalculateEnemysMove();
+                }
+            }
 
 
         }
+        
         void playVideo(ALLEGRO_VIDEO *Video){
 
 
@@ -990,124 +1211,36 @@ class Game{
                 al_rest(0.01);
             }
         
+            ALLEGRO_BITMAP *press = al_load_bitmap("./Resources/Cortos/press_enter.png");
+            al_draw_bitmap(bitmap, 0, 0, 0);
+            al_draw_bitmap(press, 0, 0, 0);
+            al_flip_display();
+            while(true){
+                ALLEGRO_EVENT ev;
+                al_wait_for_event(this->event_queue, &ev);
+
+                if (ev.type == ALLEGRO_EVENT_KEY_DOWN){
+                    if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER)
+                        break;
+                }
+
+
+            }
             al_destroy_bitmap(bitmap);
+            al_destroy_bitmap(press);
             al_resize_display(this->display, mapsize*resourceSize, mapsize*resourceSize);
 
         }
 
 		int  multiPlayer(){
-			al_resize_display(this->display,2*al_get_display_width(this->display), al_get_display_height(this->display));
-			al_clear_to_color(al_map_rgb(0,0,0));
-			this->PaintMap(0, this->gameplayer);
-			this->PaintMap(resourceSize * mapsize, this->gameMulti);
-			al_flip_display();	
-
-			//
-			while(true){
-				ALLEGRO_EVENT ev;
-				
-				al_wait_for_event(this->event_queue, &ev);
-				if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
-					return 2;
-				}else if(ev.type == ALLEGRO_EVENT_TIMER) {
-					
-					if(this->winnigGame()){
-						restarGame(mapsize,2,0,5,false,true,true, rand()%3);
-					}
-
-					if(this->isEndGame()){
-						return 1;
-					}
-					this->EnemysMove();
-
-				
-					//this->enemyMovePaint();
-					
-					//al_flip_display();
-					//al_rest(0.05);	
-					this->PaintMap(0, this->gameplayer);
-					this->PaintMap(resourceSize * mapsize, this->gameMulti);
-					al_flip_display();	
-					
-
-				}if(ev.type == ALLEGRO_EVENT_KEY_DOWN) {
-
-					this->gameplayer.moveAnimation(ev);
-					this->gameMulti.moveAnimation(ev);
-					
-					//this->playerMovePaint();
-					//al_flip_display();
-					//al_rest(0.05);	
-					this->PaintMap(0, this->gameplayer);
-					this->PaintMap(resourceSize * mapsize, this->gameMulti);
-					al_flip_display();	
-						
-					this->recalculateEnemysMove();
-				}
-			}
+			
+			return(playGame(1, rand()%2));
 
 		}
 
 		int  arcade(){
-            
-			al_start_timer(this->timer);
-			al_clear_to_color(al_map_rgb(0,0,0));
-			this->PaintMap(0, this->gameplayer);
-			al_flip_display();	
-            int times = 0;
-			while(true){
-				ALLEGRO_EVENT ev;
-				
-				al_wait_for_event(this->event_queue, &ev);
-				if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
-					return 2;
-				}else if(ev.type == ALLEGRO_EVENT_TIMER) {
-					   
-      
-					if(this->winnigGame()){
-                        times++;
-						restarGame(mapsize + 2*times,2,4,5,true,false,true, rand()%3);
-					}
-
-					if(this->isEndGame()){
-						return 1;
-					}
-					if(this->NeedEnemys)
-                        this->EnemysMove();
-                     
-				    if(this->NeedPeople){
-                        this->PeopleMove();
-                        PeopleChange();
-                    }
-                    if(this->NeedObjects){
-                        objectFind();
-                    }
-					//this->enemyMovePaint();
-					
-					//al_flip_display();
-					//al_rest(0.05);	
-					this->PaintMap(0, this->gameplayer);
-
-					al_flip_display();	
-					
-
-				}if(ev.type == ALLEGRO_EVENT_KEY_DOWN) {
-
-					this->gameplayer.moveAnimation(ev);
-
-                    if(this->NeedPeople)
-                        PeopleChange();
-					
-					//this->playerMovePaint();
-					//al_flip_display();
-					//al_rest(0.05);	
-					this->PaintMap(0, this->gameplayer);
-					al_flip_display();	
-						
-					if(this->NeedEnemys)
-                        this->recalculateEnemysMove();
-				}
-			}
+            return(playGame(2, rand()%2));
+			
 		}
 
 		void restarGame(int mapsize, int numEnemys, int numPeople,int numObjects, bool needPeople, bool NeedEnemys, bool needObjects , int set){
@@ -1122,6 +1255,8 @@ class Game{
             this->NeedPeople = needPeople;
             this->NeedEnemys = NeedEnemys;
             this->NeedObjects = needObjects;
+            this->PeopleLeft = 4;
+            this->PeopleLeftMulti = 4;
             if(!initAssets(set))
                 cout << "error con assets";
 			for(int i =0;i<numEnemys; i++)
@@ -1132,21 +1267,27 @@ class Game{
 
         bool initAssets(int set){
 
-            string wallPath,graundPath,openPath;
+            string wallPath,graundPath,openPath, losePath, winPath;
 
             if(set == 0){
                 wallPath = "./Resources/PrimerNivel/Arbusto.png";
                 graundPath = "./Resources/PrimerNivel/piso.png";
                 openPath = "./Resources/Cortos/open.ogv";
+                losePath = "./Resources/PrimerNivel/Lost_lvl1.png";
+                winPath = "./Resources/PrimerNivel/Victory_lvl1.png";
             }else if(set==1){
                 wallPath = "./Resources/SegundoNivel/wall.png";
                 graundPath = "./Resources/SegundoNivel/graund.png";
-                openPath = "./Resources/Cortos/open.ogv";
+                openPath = "./Resources/Cortos/Level2.ogv";
+                losePath = "./Resources/PrimerNivel/Lost_lvl1.png";
+                winPath = "./Resources/PrimerNivel/Victory_lvl1.png";
 
             }else{
                 wallPath = "./Resources/PrimerNivel/Arbusto.png";
                 graundPath = "./Resources/PrimerNivel/piso.png";
                 openPath = "./Resources/Cortos/open.ogv";
+                losePath = "./Resources/PrimerNivel/Lost_lvl1.png";
+                winPath = "./Resources/PrimerNivel/Victory_lvl1.png";
             }
 
             this->wall = al_load_bitmap(wallPath.c_str());
@@ -1158,6 +1299,18 @@ class Game{
             }
             this->graund = al_load_bitmap(graundPath.c_str());
             if(!this->graund) {
+                fprintf(stderr, "failed to create graund bitmap!\n");
+                this->Clean();
+                return false;
+            }
+            this->Loss = al_load_bitmap(losePath.c_str());
+            if(!this->Loss) {
+                fprintf(stderr, "failed to create Loss bitmap!\n");
+                this->Clean();
+                return false;
+            }
+            this->win = al_load_bitmap(winPath.c_str());
+            if(!this->win) {
                 fprintf(stderr, "failed to create graund bitmap!\n");
                 this->Clean();
                 return false;
@@ -1189,8 +1342,8 @@ class Game{
                 return false;
             }
 
-            this->gamenemy = new gameEnemy[numEnemys];
-            for(int i =0;i<numEnemys; i++){
+            this->gamenemy = new gameEnemy[2*numEnemys];
+            for(int i =0;i<2*numEnemys; i++){
                 this->gamenemy[i].changeState(set);
                 this->gamenemy[i].setCord(maze.enemysCord[i]);
                 this->gamenemy[i].rad = 3;
@@ -1202,27 +1355,27 @@ class Game{
                 }
             }
 
-            for(int i =0;i<numPeople; i++){
-                if(i == 0)
-                    if(i == 0)
-                        this->gamepeople[i].dent = "P1";
-                    if(i == 1)
-                        this->gamepeople[i].dent = "P2";
-                    if(i == 2)
-                        this->gamepeople[i].dent = "P3";
-                    if(i == 3)
-                        this->gamepeople[i].dent = "P3";
-
-                this->gamepeople[i].changeState();
+            for(int i =0;i<2*numPeople; i++){
+                if(i == 0 || i == 4)
+                    this->gamepeople[i].dent = "P1";
+                if(i == 1 || i == 5)
+                    this->gamepeople[i].dent = "P2";
+                if(i == 2 || i == 6)
+                    this->gamepeople[i].dent = "P3";
+                if(i == 3 || i == 7)
+                    this->gamepeople[i].dent = "P3";
+                if(!this->gamepeople[i].Efect)
+                    this->gamepeople[i].changeState();
                 this->gamepeople[i].setCord(maze.peopleCord[i]);
                 //cout << this->gamepeople[i].stateX << " " <<  this->gamepeople[i].stateY << endl;
                 if(!this->gamepeople[i].BitMap) {
-                    
+                    cout << i << endl;
                     fprintf(stderr, "failed to create people bitmap!\n");
                     this->Clean();
                     return false;
                 }
             }
+
 
             return true;
 
