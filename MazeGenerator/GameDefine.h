@@ -295,20 +295,17 @@ public:
     bool taken[5];
     pair<int, int> ObjectsCord[5];
     int HowLeft;
-    Objects(){
-
-        for (int i = 1; i < 6; ++i){
+    Objects(){    
+        HowLeft = 5;   
+    }
+    void set_BitMaps(){
+          for (int i = 1; i < 6; ++i){
             C[i-1] = al_load_bitmap(("./Resources/SegundoNivel/C"+to_string(i)+".png").c_str());
             if(!C[i-1])
                 cout << "bitmap object no listo"<<  "./Resources/SegundoNivel/C"+to_string(i)+".png"<< endl;
             taken[i-1] = false;
         }
-       
-        HowLeft = 5;
-       
-
     }
-
     void setObjectsCord(pair<int,int> cord[]){
         for(int i=0 ;i<5;i++)
             ObjectsCord[i] = cord[i];
@@ -398,16 +395,26 @@ class Game{
 
         void PeopleMove(){
               
-            for (int i = 0; i < 4; ++i)
+            for (int i = 0; i < numPeople; ++i)
                     this->gamepeople[i].moveAnimation();
                 
         }
 
         void PeopleChange(){
               
-            for (int i = 0; i < 4; ++i)
-                    if(this->gamepeople[i].stateX == this->gameplayer.stateX and this->gamepeople[i].stateY == this->gameplayer.stateY and this->gamepeople[i].Efect)
+            for (int i = 0; i < numPeople; ++i)
+                    if(this->gamepeople[i].stateX == this->gameplayer.stateX and this->gamepeople[i].stateY == this->gameplayer.stateY and this->gamepeople[i].Efect and this->gameObject.is_ready())
                         this->gamepeople[i].changeState();
+                
+        }
+
+        void objectFind(){
+              
+            for (int i = 0; i < numObjects; ++i)
+                    if(this->gameObject.ObjectsCord[i].second == this->gameplayer.stateX and this->gameObject.ObjectsCord[i].first == this->gameplayer.stateY and !this->gameObject.taken[i]){
+                        this->gameObject.taken[i] = true;
+                        this->gameObject.find_object();
+                    }
                 
         }
 		void recalculateEnemysMove(){
@@ -537,7 +544,7 @@ class Game{
 					return false;
 			}
 
-            if(!initAssets(0)){
+            if(!initAssets(1)){
                     fprintf(stderr, "failed to create Assets!\n");
                     
                     this->Clean();
@@ -586,7 +593,7 @@ class Game{
                 for (int i = 0; i < this->numPeople; ++i)   
                     peoplePaint[i].second = (this->gamepeople[i].stateX+1 - xStart)*resourceSize;
                 for (int i = 0; i < this->numObjects; ++i)   
-                    peoplePaint[i].second = (this->gameObject.ObjectsCord[i].second+1 - xStart)*resourceSize;
+                    objectPaints[i].second = (this->gameObject.ObjectsCord[i].second+1 - xStart)*resourceSize;
                 
 				playerPaint.second = resourceSize*(mapsize/2+ 1);
 			}
@@ -599,7 +606,7 @@ class Game{
                 for (int i = 0; i < this->numPeople; ++i)   
                     peoplePaint[i].first = (this->gamepeople[i].stateY - yStart+1)*resourceSize;
                 for (int i = 0; i < this->numObjects; ++i)   
-                    peoplePaint[i].first = (this->gameObject.ObjectsCord[i].first - yStart+1)*resourceSize;
+                    objectPaints[i].first = (this->gameObject.ObjectsCord[i].first - yStart+1)*resourceSize;
 				playerPaint.first = (ActualPlayerPint.stateY-yStart+1)*resourceSize;
 			}
 			if (ActualPlayerPint.stateX > 2*mazeSize-mapsize/2){
@@ -610,7 +617,7 @@ class Game{
                 for (int i = 0; i < this->numPeople; ++i)   
                     peoplePaint[i].second = (this->gamepeople[i].stateX+1 -xStart )*resourceSize;
                 for (int i = 0; i < this->numObjects; ++i)   
-                    peoplePaint[i].second = (this->gameObject.ObjectsCord[i].second+1 -xStart )*resourceSize;
+                    objectPaints[i].second = (this->gameObject.ObjectsCord[i].second+1 -xStart )*resourceSize;
 				playerPaint.second = (ActualPlayerPint.stateX-xStart + 1)*resourceSize;
 			}
 
@@ -671,7 +678,7 @@ class Game{
                 for (int i = 0; i < this->numObjects; ++i){
                     if(this->gameObject.ObjectsCord[i].second + 1 >= xStart and this->gameObject.ObjectsCord[i].second + 1 < xEnd and this->gameObject.ObjectsCord[i].first + 1 >= yStart  and this->gameObject.ObjectsCord[i].first + 1 <yEnd){
                             if(!gameObject.taken[i])
-                                al_draw_bitmap_region(gameObject.C[i],0,0, resourceSize,  resourceSize, peoplePaint[i].second+ Move,  peoplePaint[i].first , 0);
+                                al_draw_bitmap_region(gameObject.C[i],0,0, resourceSize,  resourceSize, objectPaints[i].second+ Move,  objectPaints[i].first , 0);
                     }
                 } 
 		}
@@ -1072,7 +1079,9 @@ class Game{
                         this->PeopleMove();
                         PeopleChange();
                     }
-
+                    if(this->NeedObjects){
+                        objectFind();
+                    }
 					//this->enemyMovePaint();
 					
 					//al_flip_display();
@@ -1130,8 +1139,8 @@ class Game{
                 graundPath = "./Resources/PrimerNivel/piso.png";
                 openPath = "./Resources/Cortos/open.ogv";
             }else if(set==1){
-                wallPath = "./Resources/PrimerNivel/Arbusto.png";
-                graundPath = "./Resources/PrimerNivel/piso.png";
+                wallPath = "./Resources/SegundoNivel/wall.png";
+                graundPath = "./Resources/SegundoNivel/graund.png";
                 openPath = "./Resources/Cortos/open.ogv";
 
             }else{
@@ -1162,6 +1171,7 @@ class Game{
             }          
 
             this->gameObject.setObjectsCord(this->maze.ObjectsCord);
+            this->gameObject.set_BitMaps();
             this->gameplayer.changeState(set);
             this->gameplayer.setCord(this->maze.playerCord);
             if(!this->gameplayer.BitMap) {
