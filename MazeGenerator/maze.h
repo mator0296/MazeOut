@@ -25,7 +25,7 @@ class Maze{
 		void initCord(){
 
 			this->playerCord = make_pair( 2*(rand() % this->graphMap->get_num_nodes()),0);
-			endCord = make_pair( 2*(rand() % this->graphMap->get_num_nodes()),2*(this->mapSize - 1) + 1);
+			endCord = make_pair( 2*(rand() % this->graphMap->get_num_nodes()),2*(this->mapSize +1) -1);
 
 			for(int i = 0; i< 2*numEnemys ; i++)
 				this->enemysCord[i] = make_pair(2*(rand() % this->graphMap->get_num_nodes()), 2*(rand() % this->graphMap->get_num_nodes()));

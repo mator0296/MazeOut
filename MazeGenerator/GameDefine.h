@@ -960,9 +960,17 @@ class Game{
                     return 0;
 
             }
-            cout << maze.endCord.first << " " << maze.endCord.second << endl;
-            map[maze.endCord.first ][maze.endCord.second] = ' ';
-			return(this->gameplayer.stateY == this->maze.endCord.first and this->gameplayer.stateX == this->maze.endCord.second );
+            cout << maze.endCord.first << " " << maze.endCord.second -1<< endl;
+            cout << this->gameplayer.stateY << " " << this->gameplayer.stateX << endl;
+            for(int i = 0; i< (2*mapsize) + 1 ; i++){
+                for (int j = 0; j < (2*mapsize) + 1 ; ++j){
+
+                    cout << map[i][j] ;
+                }
+                cout << endl;
+            }
+            map[ maze.endCord.first+1][maze.endCord.second-1] = ' ';
+			return(this->gameplayer.stateY == this->maze.endCord.first and this->gameplayer.stateX +1== this->maze.endCord.second-1 );
 		}
 
 		void controleMenu(){
@@ -1193,7 +1201,14 @@ class Game{
                     if(type == 1)
                         this->PaintMap(resourceSize * mapsize, this->gameMulti);
                     al_flip_display();  
-                        
+                    if(this->winnigGame(type ==1)){
+                       
+                        if(type ==2){
+                            restarGame(mapsize+2*times,2,4,10, 1 == rand()%2,1 == rand()%2,1 == rand()%2,rand()%2); 
+                            times++;
+                        }
+                        return 0;
+                    }
                     if(this->NeedEnemys)
                         this->recalculateEnemysMove();
                 }
