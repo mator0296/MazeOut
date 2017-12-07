@@ -178,7 +178,8 @@ class gameEnemy: public gameEntity{
 	public:
 		DynList<pair<int, int> > moveList;
 		int i, rad;
-		gameEnemy():gameEntity(NULL), i(0){}
+        int Available;
+		gameEnemy():gameEntity(NULL), i(0), Available(false), rad(3){}
 		gameEnemy( ALLEGRO_BITMAP *BitMap):gameEntity(BitMap){};
 		void moveAnimation(){
 			this->i++;
@@ -406,7 +407,7 @@ class Game{
 
 		void EnemysMove(){
 			for (int i = 0; i < this->numEnemys; ++i)
-				if(pow(this->gameplayer.stateX - this->gamenemy[i].stateX, 2) + pow(this->gameplayer.stateY - this->gamenemy[i].stateY, 2) < pow(this->gamenemy[i].rad,2))
+				if(gamenemy[i].rad == 0)
 					this->gamenemy[i].moveAnimation();
           /*  for (int i =  this->numEnemys; i < 2*this->numEnemys; ++i)
                 if(pow(this->gameplayer.stateX - this->gamenemy[i].stateX, 2) + pow(this->gameplayer.stateY - this->gamenemy[i].stateY, 2) < pow(this->gamenemy[i].rad,2))
@@ -458,9 +459,13 @@ class Game{
           
 
 			for (int i = 0; i < this->numEnemys; ++i)
-				this->gamenemy[i].setmoveList(this->maze,this->gameplayer);
-            for (int i =this->numEnemys; i <2*this->numEnemys ; ++i)
-                this->gamenemy[i].setmoveList(this->maze,this->gameMulti);
+                if(gamenemy[i].rad == 0)
+				    this->gamenemy[i].setmoveList(this->maze,this->gameplayer);
+                else if(gamenemy[i].Available)
+                        gamenemy[i].rad--;
+            
+
+            
 		}
 		
 
@@ -687,7 +692,7 @@ class Game{
             if(NeedEnemys){
                 if(ActualPlayerPint.type){
                     for (int i = 0; i < this->numEnemys; ++i){
-                        if(this->gamenemy[i].stateX + 1 >= xStart and this->gamenemy[i].stateX + 1 < xEnd and this->gamenemy[i].stateY + 1 >= yStart  and this->gamenemy[i].stateY + 1 <yEnd){
+                        if(this->gamenemy[i].stateX + 1 >= xStart and this->gamenemy[i].stateX + 1 < xEnd and this->gamenemy[i].stateY + 1 >= yStart  and this->gamenemy[i].stateY + 1 <yEnd and gamenemy[i].rad == 0 and gamenemy[i].Available){
                             if(gamenemy[i].state == 0)
                                 al_draw_bitmap_region(gamenemy[i].BitMap,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
                             if(gamenemy[i].state == 1)
@@ -929,10 +934,13 @@ class Game{
 		bool isEndGame(){
             
 
-			for(int i = 0; i < this->numEnemys; ++i)
-				if(gamenemy[i].stateX == gameplayer.stateX and  gamenemy[i].stateY == gameplayer.stateY and this->NeedEnemys ){
-					return false;
-				}
+			for(int i = 0; i < this->numEnemys; ++i){ 
+                if(gamenemy[i].stateX == gameplayer.stateX and  gamenemy[i].stateY == gameplayer.stateY and this->NeedEnemys  and gamenemy[i].rad == 0){
+                    return true;
+                }else if(gamenemy[i].stateX == gameplayer.stateX and  gamenemy[i].stateY == gameplayer.stateY and this->NeedEnemys  and !gamenemy[i].Available){
+                    gamenemy[i].Available = true;
+                }
+            }
 
 			return false;
 		}
@@ -942,17 +950,18 @@ class Game{
 		int winnigGame(bool multiPlayerstate){
             if(NeedObjects){
                     if(!this->gameObject.is_ready() and !multiPlayerstate)
-                        return 0
+                        return 0;
 
 
             }
 
             if(NeedPeople){
                 if(!this->PeopleLeft != 0 and !multiPlayerstate)
-                    return 0
+                    return 0;
 
             }
-            map[maze.endCord.first][maze.endCord.second] = ' ';
+            cout << maze.endCord.first << " " << maze.endCord.second << endl;
+            map[maze.endCord.first ][maze.endCord.second] = ' ';
 			return(this->gameplayer.stateY == this->maze.endCord.first and this->gameplayer.stateX == this->maze.endCord.second );
 		}
 
@@ -1049,7 +1058,7 @@ class Game{
 			
             for(int i = 0; i < 2; ++i){
                 initAssets(i);
-                this->playVideo(this->Open);
+                //this->playVideo(this->Open);
                 int result = this->playGame(0,i);
                 if(result == 1){
                     al_draw_bitmap(Loss, 0, 0, 0);
@@ -1093,7 +1102,7 @@ class Game{
 
             if(type == 0){
                 if(set == 0)
-                    restarGame(mapsize,2,0,0,false,true,false,set);
+                    restarGame(mapsize,4,0,0,false,true,false,set);
                 else if(set ==1)
                     restarGame(mapsize,0,4,10,true,false,true,set);
 
@@ -1119,7 +1128,7 @@ class Game{
                 }else if(ev.type == ALLEGRO_EVENT_TIMER) {
                        
       
-                    if(this->winnigGame()){
+                    if(this->winnigGame(type ==1)){
                        
                         if(type ==2){
                             restarGame(mapsize+2*times,2,4,10, 1 == rand()%2,1 == rand()%2,1 == rand()%2,rand()%2); 
@@ -1152,7 +1161,7 @@ class Game{
                     
 
                 }if(ev.type == ALLEGRO_EVENT_KEY_DOWN) {
-                     if(this->winnigGame()){
+                     if(this->winnigGame(type ==1)){
                        
                         if(type ==2){
                             restarGame(mapsize+2*times,2,4,10, 1 == rand()%2,1 == rand()%2,1 == rand()%2,rand()%2); 
