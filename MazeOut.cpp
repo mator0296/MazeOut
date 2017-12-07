@@ -1,5 +1,5 @@
 #include <GameDefine.h>
-
+#include <stdexcept>  
 int main(){
 
 	mazeSize = 10;
@@ -7,7 +7,7 @@ int main(){
 	resourceSize = 70;
 	Game mazeGame;
 	
-	if(!mazeGame.init(1,1))
+	if(!mazeGame.init(1))
 		return 0;
 
 
@@ -22,9 +22,13 @@ int main(){
 
 
 
+	try{ 
+		mazeGame.controleMenu();
+	}catch(overflow_error &e){
 
-	mazeGame.controleMenu();
-
+		cout << e.what() << endl;
+		
+	}
 
 	
    

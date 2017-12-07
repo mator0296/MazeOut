@@ -14,7 +14,7 @@ WARN = -Wall -Wextra -Wcast-align -Wno-sign-compare -Wno-write-strings \
 FLAGS = -DDEBUG -D_GLIBCXX__PTHREADS -g $(OPTIMIZATION) -std=c++14 $(WARN)
 
 INCLUDE = -I. -I $(ALEPH)  -I ./MazeGenerator
-Alegro = `pkg-config --cflags --libs allegro-5.0 allegro_acodec-5.0 allegro_audio-5.0 allegro_color-5.0 allegro_dialog-5.0 allegro_font-5.0 allegro_image-5.0 allegro_main-5.0 allegro_memfile-5.0 allegro_physfs-5.0 allegro_primitives-5.0 allegro_ttf-5.0`
+Alegro = `pkg-config --cflags --libs allegro-5 allegro_acodec-5 allegro_audio-5  allegro_video-5 allegro_color-5 allegro_dialog-5 allegro_font-5 allegro_image-5 allegro_main-5 allegro_memfile-5 allegro_physfs-5 allegro_primitives-5 allegro_ttf-5`
 LIBS = -L $(ALEPH) \
        -lAleph -lc -lm -lgsl -lgslcblas -lgmp -lmpfr -lasprintf -lpthread
 

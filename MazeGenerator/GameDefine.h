@@ -5,6 +5,7 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
+#include <allegro5/allegro_video.h>
 #include <maze.h>
 #include <Define.h>
 
@@ -25,12 +26,18 @@ class gameEntity{
 			this->Clean();	
 		};
 		void Clean(){
-			al_destroy_bitmap(this->BitMap);
-			al_destroy_bitmap(this->right);
-			al_destroy_bitmap(this->left);
-			al_destroy_bitmap(this->walkLeft);
-			al_destroy_bitmap(this->walkRight);
-			al_destroy_bitmap(this->up);
+			if(this->BitMap)
+				al_destroy_bitmap(this->BitMap);
+			if(this->right)
+				al_destroy_bitmap(this->right);
+			if(this->left)
+				al_destroy_bitmap(this->left);
+			if(this->walkLeft)
+				al_destroy_bitmap(this->walkLeft);
+			if(this->walkRight)
+				al_destroy_bitmap(this->walkRight);
+			if(this->up)
+				al_destroy_bitmap(this->up);
 
 		}
 		void setCord(pair<int,int> xy){
@@ -38,30 +45,43 @@ class gameEntity{
 			this->stateX = xy.second;
 			this->stateY = xy.first;
 		}
-		void moveRight(){
+		bool moveRight(){
 			if(this->stateX < (2*mazeSize +1) )
-				if(map[this->stateY+1][this->stateX+2] != 'X')
+				if(map[this->stateY+1][this->stateX+2] != 'X'){
 					this->stateX++;
+                    return true;
+                }
+            return false;
 			
 		}
-		void moveLeft(){
+		bool moveLeft(){
 			if(this->stateX > 0 )
-				if( map[this->stateY+1][this->stateX] != 'X')
+				if( map[this->stateY+1][this->stateX] != 'X'){
 					this->stateX--;
+                    return true;
+                }
+            return false;
 			
 		}
-		void moveDown(){
+		bool moveDown(){
 			if(this->stateY< (2*mazeSize +1) )
-				if( map[this->stateY+2][this->stateX+1] != 'X')
+				if( map[this->stateY+2][this->stateX+1] != 'X'){
 					this->stateY++;
+                    return true;
+                }
+            return false;
 			
 		}
-		void moveUp(){
+		bool moveUp(){
 			if(this->stateY> 0 )
-				if( map[this->stateY][this->stateX+1] != 'X')
+				if( map[this->stateY][this->stateX+1] != 'X'){
 					this->stateY--;
-			
+                    return true;
+                }
+			return false;
 		}
+        
+
 
 };
 
@@ -120,6 +140,34 @@ class gamePlayer: public gameEntity{
 				}
 		}
 
+       
+        void changeState(int i){
+
+            if(i == 0){
+                this->BitMap = al_load_bitmap("./Resources/PrimerNivel/Niño_Frente.png");
+                this->left = al_load_bitmap("./Resources/PrimerNivel/Niño_Izquierda.png");
+                this->right = al_load_bitmap("./Resources/PrimerNivel/Niño_Derecha.png");
+                this->walkRight = al_load_bitmap("./Resources/PrimerNivel/Niño_CaminandoDer.png");
+                this->walkLeft = al_load_bitmap("./Resources/PrimerNivel/Niño_CaminandoIzq.png");
+                this->up = al_load_bitmap("./Resources/PrimerNivel/Niño_Espalda.png");
+            }else if(i == 1){
+                this->BitMap = al_load_bitmap("./Resources/PrimerNivel/Niño_Frente.png");
+                this->left = al_load_bitmap("./Resources/PrimerNivel/Niño_Izquierda.png");
+                this->right = al_load_bitmap("./Resources/PrimerNivel/Niño_Derecha.png");
+                this->walkRight = al_load_bitmap("./Resources/PrimerNivel/Niño_CaminandoDer.png");
+                this->walkLeft = al_load_bitmap("./Resources/PrimerNivel/Niño_CaminandoIzq.png");
+                this->up = al_load_bitmap("./Resources/PrimerNivel/Niño_Espalda.png");
+
+            }else{
+                this->BitMap = al_load_bitmap("./Resources/PrimerNivel/Niño_Frente.png");
+                this->left = al_load_bitmap("./Resources/PrimerNivel/Niño_Izquierda.png");
+                this->right = al_load_bitmap("./Resources/PrimerNivel/Niño_Derecha.png");
+                this->walkRight = al_load_bitmap("./Resources/PrimerNivel/Niño_CaminandoDer.png");
+                this->walkLeft = al_load_bitmap("./Resources/PrimerNivel/Niño_CaminandoIzq.png");
+                this->up = al_load_bitmap("./Resources/PrimerNivel/Niño_Espalda.png");
+
+            }
+        }
 		~gamePlayer(){
 			Clean();
 		}
@@ -154,33 +202,155 @@ class gameEnemy: public gameEntity{
 		void setmoveList(Maze &maze, gamePlayer &gameplayer){
 
 			moveList = maze.CordPath(make_pair(this->stateY, this->stateX), make_pair(gameplayer.stateY, gameplayer.stateX));
-			/*moveList.for_each([](pair<int,int> a){
-
-				cout << "(" << a.first << ',' << a.second << ')' << endl;
-			});*/
 			this->i = 0;
 		}
 		~gameEnemy(){
 			Clean();
 			
 		}
+        void changeState(int i){
 
+            if(i == 0){
+                this->BitMap = al_load_bitmap("./Resources/PrimerNivel/Malo1_Frente.png");
+                this->left = al_load_bitmap("./Resources/PrimerNivel/Malo1_Izquierda.png");
+                this->right = al_load_bitmap("./Resources/PrimerNivel/Malo1_Derecha.png");
+                this->walkRight = al_load_bitmap("./Resources/PrimerNivel/Malo1_CaminandoDer.png");
+                this->walkLeft = al_load_bitmap("./Resources/PrimerNivel/Malo1_CaminandoIzq.png");
+                this->up = al_load_bitmap("./Resources/PrimerNivel/Malo1_Espalda.png");
+            }else if(i == 1){
+                this->BitMap = al_load_bitmap("./Resources/PrimerNivel/Malo1_Frente.png");
+                this->left = al_load_bitmap("./Resources/PrimerNivel/Malo1_Izquierda.png");
+                this->right = al_load_bitmap("./Resources/PrimerNivel/Malo1_Derecha.png");
+                this->walkRight = al_load_bitmap("./Resources/PrimerNivel/Malo1_CaminandoDer.png");
+                this->walkLeft = al_load_bitmap("./Resources/PrimerNivel/Malo1_CaminandoIzq.png");
+                this->up = al_load_bitmap("./Resources/PrimerNivel/Malo1_Espalda.png");
+
+            }else{
+                this->BitMap = al_load_bitmap("./Resources/PrimerNivel/Malo1_Frente.png");
+                this->left = al_load_bitmap("./Resources/PrimerNivel/Malo1_Izquierda.png");
+                this->right = al_load_bitmap("./Resources/PrimerNivel/Malo1_Derecha.png");
+                this->walkRight = al_load_bitmap("./Resources/PrimerNivel/Malo1_CaminandoDer.png");
+                this->walkLeft = al_load_bitmap("./Resources/PrimerNivel/Malo1_CaminandoIzq.png");
+                this->up = al_load_bitmap("./Resources/PrimerNivel/Malo1_Espalda.png");
+
+            }
+        }
+
+};
+
+class gamePeople: public gameEntity{
+    public:
+        string dent;
+        bool Efect;
+        gamePeople():gameEntity(NULL), Efect(false){}
+        gamePeople(ALLEGRO_BITMAP *BitMap):gameEntity(BitMap){};
+        void moveAnimation(){
+            
+            this->state  = rand()%4;
+            if(this->state== 0)
+                if(this->moveUp())
+                    return;
+            if(this->state== 1)
+               if(this->moveDown())
+                    return ;
+            if(this->state== 2)
+                if(this->moveLeft())
+                    return;
+            if(this->state== 3)
+                if(this->moveRight())
+                    return;
+                     
+        }
+        void changeState(){
+
+            if(!Efect){
+                this->BitMap = al_load_bitmap(("./Resources/SegundoNivel/"+this->dent+"_F.png").c_str());
+                this->left = al_load_bitmap(("./Resources/SegundoNivel/"+this->dent+"_I.png").c_str());
+                this->right = al_load_bitmap(("./Resources/SegundoNivel/"+this->dent+"_D.png").c_str());
+                this->walkRight = al_load_bitmap(("./Resources/SegundoNivel/"+this->dent+"_DC.png").c_str());
+                this->walkLeft = al_load_bitmap(("./Resources/SegundoNivel/"+this->dent+"_IC.png").c_str());
+                this->up = al_load_bitmap(("./Resources/SegundoNivel/"+this->dent+"_E.png").c_str());
+                Efect = true;
+            }else{
+                this->BitMap = al_load_bitmap(("./Resources/SegundoNivel/"+this->dent+"O_F.png").c_str());
+                this->left = al_load_bitmap(("./Resources/SegundoNivel/"+this->dent+"O_I.png").c_str());
+                this->right = al_load_bitmap(("./Resources/SegundoNivel/"+this->dent+"O_D.png").c_str());
+                this->walkRight = al_load_bitmap(("./Resources/SegundoNivel/"+this->dent+"O_DC.png").c_str());
+                this->walkLeft = al_load_bitmap(("./Resources/SegundoNivel/"+this->dent+"O_IC.png").c_str());
+                this->up = al_load_bitmap(("./Resources/SegundoNivel/"+this->dent+"O_E.png").c_str());
+                Efect = false;
+            }
+        }
+      
+        ~gamePeople(){
+            Clean();
+            
+        }
+
+};
+
+class Objects{
+public:
+    ALLEGRO_BITMAP *C1,*C2,*C3,*C4,*C5;
+    pair<int, int> ObjectCord[5];
+    int HowLeft;
+    Objects(){
+        C1 = al_load_bitmap("./Resources/SegundoNivel/C1.png");
+        C2 = al_load_bitmap("./Resources/SegundoNivel/C2.png");
+        C3 = al_load_bitmap("./Resources/SegundoNivel/C3.png");
+        C4 = al_load_bitmap("./Resources/SegundoNivel/C4.png");
+        C5 = al_load_bitmap("./Resources/SegundoNivel/C5.png");
+        HowLeft = 5;
+        if(!C1 || !C2 || !C3 ||!C4 ||!C5){
+            cout << "bitmap object no listo" << endl;
+
+        }
+
+    }
+
+    void setObjectsCord(pair<int,int> cord[]){
+        for(int i=0 ;i<5;i++)
+            ObjectCord[i] = cord[i];
+    }
+
+    void find_object(){
+
+        HowLeft--;
+    }
+
+    bool is_ready(){
+        return (HowLeft == 0);
+    }
+    ~Objects(){
+        al_destroy_bitmap(C1);
+        al_destroy_bitmap(C2);
+        al_destroy_bitmap(C3);
+        al_destroy_bitmap(C4);
+        al_destroy_bitmap(C5);
+    }
+
+    
 };
 
 
 class Game{
 	public:
-		int FPS = 3;
+		int FPS = 2;
 		int numEnemys;
 		int numPeople;
+        bool NeedPeople;
+        bool NeedEnemys;
+        Objects object;
 		Maze maze;
 		ALLEGRO_DISPLAY *display;
 		ALLEGRO_BITMAP *wall, *graund, *Menu, *MenuJugar,  *MenuArcade, *MenuMultiplayer, *MenuSalir;
 		gamePlayer gameplayer, gameMulti;
 		gameEnemy *gamenemy;
+        gamePeople gamepeople[4];
 		ALLEGRO_EVENT_QUEUE *event_queue;
 		ALLEGRO_TIMER *timer;
-		 ALLEGRO_SAMPLE *gotera;
+		ALLEGRO_SAMPLE *gotera;
+		ALLEGRO_VIDEO *Open;
 
 		Game(){
 			this->display = NULL;
@@ -193,21 +363,32 @@ class Game{
 		};
 
 		void Clean(){
-			al_destroy_bitmap(this->wall);
-			al_destroy_display(this->display);
-			al_destroy_event_queue(this->event_queue);	
-			al_destroy_timer(this->timer);
-			al_destroy_bitmap(this->graund);
-			al_destroy_bitmap(this->MenuArcade);
-			al_destroy_bitmap(this->MenuSalir);
-			al_destroy_bitmap(this->MenuJugar);
-			al_destroy_bitmap(this->Menu);
+			if(this->wall)
+				al_destroy_bitmap(this->wall);
+			if(this->display)
+				al_destroy_display(this->display);
+			if(this->event_queue)
+				al_destroy_event_queue(this->event_queue);	
+			if(this->timer)
+				al_destroy_timer(this->timer);
+			if(this->graund)
+				al_destroy_bitmap(this->graund);
+			if(this->MenuArcade)
+				al_destroy_bitmap(this->MenuArcade);
+			if(this->MenuSalir)
+				al_destroy_bitmap(this->MenuSalir);
+			if(this->MenuJugar)
+				al_destroy_bitmap(this->MenuJugar);
+			if(this->Menu)
+				al_destroy_bitmap(this->Menu);
+			if(this->Open)
+				al_close_video(this->Open);
+			if(this->gotera)
+				al_destroy_sample(this->gotera);
 			
-			this->gameplayer.Clean();
-			for (int i = 0; i < this->numEnemys; ++i)
-				this->gamenemy[i].Clean();	
 			delete this->gamenemy;
-			this->maze.Clean();	
+
+			
 		}
 
 		void EnemysMove(){
@@ -215,15 +396,36 @@ class Game{
 				if(pow(this->gameplayer.stateX - this->gamenemy[i].stateX, 2) + pow(this->gameplayer.stateY - this->gamenemy[i].stateY, 2) < pow(this->gamenemy[i].rad,2))
 					this->gamenemy[i].moveAnimation();
 		}
+
+        void PeopleMove(){
+              
+            for (int i = 0; i < 4; ++i)
+                    this->gamepeople[i].moveAnimation();
+                
+        }
+
+        void PeopleChange(){
+              
+            for (int i = 0; i < 4; ++i)
+                    if(this->gamepeople[i].stateX == this->gameplayer.stateX and this->gamepeople[i].stateY == this->gameplayer.stateY and this->gamepeople[i].Efect)
+                        this->gamepeople[i].changeState();
+                
+        }
 		void recalculateEnemysMove(){
+          
+
 			for (int i = 0; i < this->numEnemys; ++i)
 				this->gamenemy[i].setmoveList(this->maze,this->gameplayer);
+            
 		}
 		
 
-		bool init(int NumEnemys, int NumPeople){
+		bool init(int NumEnemys){
 			this->numEnemys = NumEnemys;
-			this->numPeople = NumPeople;
+			this->numPeople = 4;
+            this->NeedEnemys = false;
+            this->NeedPeople = true;
+            srand (time(NULL));
 			if(!al_init()) {
 				fprintf(stderr, "failed to initialize allegro!\n");
 				return false;
@@ -244,126 +446,47 @@ class Game{
 				fprintf(stderr, "failed to initialize audio!\n");
 				return false;
 			}
+			if(!al_init_video_addon()){
+				fprintf(stderr, "failed to initialize video!\n");
+				return false;
+			}
 
 			if(!al_init_acodec_addon()){
 				fprintf(stderr, "failed to initialize audio codecs!\n");
 				return false;
 			}
 
-			if (!al_reserve_samples(1)){
+			if (!al_reserve_samples(2)){
 				fprintf(stderr, "failed to reserve samples!\n");
 				return false;
 			}
 			
-			this->maze.initMaze(mazeSize, numEnemys);
+			this->maze.initMaze(mazeSize, numEnemys, numPeople);
 			this->maze.MakeMaze();
 
 
 			map = this->maze.getMaze();
-
+			
+		   
 			this->display = al_create_display(mapsize*resourceSize, mapsize*resourceSize);
 			if(!this->display) {
 				fprintf(stderr, "failed to create display!\n");
+				this->Clean();
 				return false;
 			}
 
 
-			this->wall = al_load_bitmap("./Resources/PrimerNivel/Arbusto.png");
-		 	if(!this->wall) {
-				fprintf(stderr, "failed to create wall bitmap!\n");
-				al_destroy_display(this->display);
-
-				return false;
-			}
-			this->graund = al_load_bitmap("./Resources/PrimerNivel/piso.png");
-		 	if(!this->graund) {
-				fprintf(stderr, "failed to create graund bitmap!\n");
-				al_destroy_display(this->display);
-				al_destroy_bitmap(this->wall);
-				return false;
-			}
-
-
-			this->gameplayer.BitMap = al_load_bitmap("./Resources/PrimerNivel/Niño_Frente.png");
-			this->gameplayer.left = al_load_bitmap("./Resources/PrimerNivel/Niño_Izquierda.png");
-			this->gameplayer.right = al_load_bitmap("./Resources/PrimerNivel/Niño_Derecha.png");
-			this->gameplayer.walkRight = al_load_bitmap("./Resources/PrimerNivel/Niño_CaminandoDer.png");
-			this->gameplayer.walkLeft = al_load_bitmap("./Resources/PrimerNivel/Niño_CaminandoIzq.png");
-			this->gameplayer.up = al_load_bitmap("./Resources/PrimerNivel/Niño_Espalda.png");
-
-			this->gameplayer.setCord(this->maze.playerCord);
-		 	if(!this->gameplayer.BitMap) {
-				fprintf(stderr, "failed to create player bitmap!\n");
-				al_destroy_display(this->display);
-				al_destroy_bitmap(this->wall);
-				al_destroy_bitmap(this->graund);
-				return false;
-			}
-
-			this->gameMulti.BitMap = al_load_bitmap("./Resources/PrimerNivel/Niño_Frente.png");
-			this->gameMulti.left = al_load_bitmap("./Resources/PrimerNivel/Niño_Izquierda.png");
-			this->gameMulti.right = al_load_bitmap("./Resources/PrimerNivel/Niño_Derecha.png");
-			this->gameMulti.walkRight = al_load_bitmap("./Resources/PrimerNivel/Niño_CaminandoDer.png");
-			this->gameMulti.walkLeft = al_load_bitmap("./Resources/PrimerNivel/Niño_CaminandoIzq.png");
-			this->gameMulti.up = al_load_bitmap("./Resources/PrimerNivel/Niño_Espalda.png");
-			this->gameMulti.type = false;
-
-			this->gameMulti.setCord(this->maze.playerCord);
-		 	if(!this->gameMulti.BitMap) {
-				fprintf(stderr, "failed to create player bitmap!\n");
-				al_destroy_display(this->display);
-				al_destroy_bitmap(this->wall);
-				al_destroy_bitmap(this->graund);
-				return false;
-			}
-
-			this->gamenemy = new gameEnemy[NumEnemys];
-			for(int i =0;i<NumEnemys; i++){
-				this->gamenemy[i].BitMap = al_load_bitmap("./Resources/PrimerNivel/Malo1_Frente.png");
-				this->gamenemy[i].left = al_load_bitmap("./Resources/PrimerNivel/Malo1_Izquierda.png");
-				this->gamenemy[i].right = al_load_bitmap("./Resources/PrimerNivel/Malo1_Derecha.png");
-				this->gamenemy[i].walkRight = al_load_bitmap("./Resources/PrimerNivel/Malo1_CaminandoDer.png");
-				this->gamenemy[i].walkLeft = al_load_bitmap("./Resources/PrimerNivel/Malo1_CaminandoIzq.png");
-				this->gamenemy[i].up = al_load_bitmap("./Resources/PrimerNivel/Malo1_Espalda.png");
-
-				this->gamenemy[i].setCord(maze.enemysCord[i]);
-				this->gamenemy[i].rad = 9;
-			 	if(!this->gamenemy[i].BitMap) {
-			 		
-					fprintf(stderr, "failed to create enemy bitmap!\n");
-					al_destroy_display(this->display);
-					al_destroy_bitmap(this->wall);
-					al_destroy_bitmap(this->graund);
-					this->gameplayer.Clean();
-					return false;
-				}
-			}
 			this->event_queue = al_create_event_queue();
 			if(!this->event_queue) {
 				fprintf(stderr, "failed to create event_queue!\n");
-				al_destroy_bitmap(this->wall);
-				al_destroy_bitmap(this->graund);
-				al_destroy_display(this->display);
-				this->gameplayer.Clean();
-				for (int i = 0; i < this->numEnemys; ++i)
-				{
-					this->gamenemy[i].Clean();
-				}
+				this->Clean();
 				
 				return false;
 			}
 		 	this->timer = al_create_timer(1.0/this->FPS);
 			if(!this->timer) {
 				fprintf(stderr, "failed to create timer!\n");
-								al_destroy_bitmap(this->wall);
-				al_destroy_display(this->display);
-				al_destroy_bitmap(this->graund);
-				al_destroy_event_queue(this->event_queue);		
-				this->gameplayer.Clean();
-				for (int i = 0; i < this->numEnemys; ++i)
-				{
-					this->gamenemy[i].Clean();
-				}
+				this->Clean();
 				return false;
 
 			}
@@ -372,16 +495,7 @@ class Game{
 			if(!this->Menu) {
 				fprintf(stderr, "failed to create Menu!\n");
 				
-				al_destroy_bitmap(this->wall);
-				al_destroy_display(this->display);
-				al_destroy_bitmap(this->graund);
-				al_destroy_event_queue(this->event_queue);		
-				this->gameplayer.Clean();
-				for (int i = 0; i < this->numEnemys; ++i)
-				{
-					this->gamenemy[i].Clean();
-				}
-				al_destroy_timer(timer);
+				this->Clean();
 				return false;
 			}
 
@@ -389,99 +503,47 @@ class Game{
 			if(!this->MenuSalir) {
 				fprintf(stderr, "failed to create MenuSalir!\n");
 				
-				al_destroy_bitmap(this->wall);
-				al_destroy_display(this->display);
-				al_destroy_bitmap(this->graund);
-				al_destroy_bitmap(this->Menu);
-				al_destroy_event_queue(this->event_queue);		
-				this->gameplayer.Clean();
-				for (int i = 0; i < this->numEnemys; ++i)
-				{
-					this->gamenemy[i].Clean();
-				}
-				al_destroy_timer(timer);
+				this->Clean();
 				return false;
 			}
 			this->MenuArcade = al_load_bitmap("./Resources/Fondos/FondoMenu-04.png");
 			if(!this->MenuArcade) {
 				fprintf(stderr, "failed to create MenuArcade!\n");
 				
-				al_destroy_bitmap(this->wall);
-				al_destroy_display(this->display);
-				al_destroy_bitmap(this->graund);
-				al_destroy_bitmap(this->Menu);
-				al_destroy_bitmap(this->MenuSalir);
-				al_destroy_event_queue(this->event_queue);		
-				this->gameplayer.Clean();
-				for (int i = 0; i < this->numEnemys; ++i)
-				{
-					this->gamenemy[i].Clean();
-				}
-				al_destroy_timer(timer);
+				this->Clean();
 				return false;
 			}
 			this->MenuJugar = al_load_bitmap("./Resources/Fondos/FondoMenu-02.png");
 			if(!this->MenuJugar) {
 				fprintf(stderr, "failed to create MenuJugar!\n");
 				
-				al_destroy_bitmap(this->wall);
-				al_destroy_display(this->display);
-				al_destroy_bitmap(this->Menu);
-				al_destroy_bitmap(this->MenuSalir);
-				al_destroy_bitmap(this->MenuArcade);
-				al_destroy_bitmap(this->graund);
-				al_destroy_event_queue(this->event_queue);		
-				this->gameplayer.Clean();
-				for (int i = 0; i < this->numEnemys; ++i)
-				{
-					this->gamenemy[i].Clean();
-				}
-				al_destroy_timer(timer);
+				this->Clean();
 				return false;
 			}
 			this->MenuMultiplayer = al_load_bitmap("./Resources/Fondos/FondoMenu-03.png");
 			if(!this->MenuMultiplayer) {
 				fprintf(stderr, "failed to create MenuMJ!\n");
 				
-				al_destroy_bitmap(this->wall);
-				al_destroy_display(this->display);
-				al_destroy_bitmap(this->graund);
-				al_destroy_bitmap(this->MenuArcade);
-				al_destroy_bitmap(this->MenuSalir);
-				al_destroy_bitmap(this->MenuJugar);
-				al_destroy_bitmap(this->Menu);
-				al_destroy_event_queue(this->event_queue);		
-				this->gameplayer.Clean();
-				for (int i = 0; i < this->numEnemys; ++i)
-				{
-					this->gamenemy[i].Clean();
-				}
-				al_destroy_timer(timer);
+				this->Clean();
 				return false;
 			}
 
-			 gotera = al_load_sample( "./Resources/Gotera.wav" );
-			 if(!this->gotera) {
+			gotera = al_load_sample( "./Resources/Gotera.wav" );
+			if(!this->gotera) {
 					fprintf(stderr, "failed to create Gotera!\n");
 					
-					al_destroy_bitmap(this->wall);
-					al_destroy_display(this->display);
-					al_destroy_bitmap(this->graund);
-					al_destroy_bitmap(this->MenuArcade);
-					al_destroy_bitmap(this->MenuSalir);
-					al_destroy_bitmap(this->MenuJugar);
-					al_destroy_bitmap(this->MenuMultiplayer);
-					al_destroy_bitmap(this->Menu);
-					al_destroy_event_queue(this->event_queue);		
-					this->gameplayer.Clean();
-					for (int i = 0; i < this->numEnemys; ++i)
-					{
-						this->gamenemy[i].Clean();
-					}
-					al_destroy_timer(timer);
+					this->Clean();
 					return false;
-				}
-		   
+			}
+
+            if(!initAssets(0)){
+                    fprintf(stderr, "failed to create Assets!\n");
+                    
+                    this->Clean();
+                    return false;
+            }
+
+			
 			return true;
 		}
 
@@ -491,9 +553,12 @@ class Game{
 			int xStart =0, xEnd = mapsize, yStart=0, yEnd = mapsize;
 			pair<int, int> playerPaint = make_pair((ActualPlayerPint.stateY+1)*resourceSize,(ActualPlayerPint.stateX+1)*resourceSize); 
 			pair<int, int> enemyPaint[6];
+            pair<int, int> peoplePaint[4];
 
 			for (int i = 0; i < this->numEnemys; ++i)
 				enemyPaint[i] = make_pair((this->gamenemy[i].stateY+1)*resourceSize,(this->gamenemy[i].stateX+1)*resourceSize); 
+            for (int i = 0; i < this->numPeople; ++i)
+                peoplePaint[i] = make_pair((this->gamepeople[i].stateY+1)*resourceSize,(this->gamepeople[i].stateX+1)*resourceSize); 
 
 			if(ActualPlayerPint.stateY > mapsize/2 ){
 
@@ -501,6 +566,8 @@ class Game{
 				yEnd = mapsize + ActualPlayerPint.stateY - mapsize/2;
 				for (int i = 0; i < this->numEnemys; ++i)	
 					enemyPaint[i].first = (this->gamenemy[i].stateY+1 - yStart)*resourceSize;
+                for (int i = 0; i < this->numPeople; ++i)   
+                    peoplePaint[i].first = (this->gamepeople[i].stateY+1 - yStart)*resourceSize;
 				playerPaint.first = resourceSize*(mapsize/2+ 1);
 
 			}
@@ -511,6 +578,8 @@ class Game{
 				xEnd = mapsize + ActualPlayerPint.stateX - mapsize/2;
 				for (int i = 0; i < this->numEnemys; ++i)	
 					enemyPaint[i].second = (this->gamenemy[i].stateX+1 - xStart)*resourceSize;
+                for (int i = 0; i < this->numPeople; ++i)   
+                    peoplePaint[i].second = (this->gamepeople[i].stateX+1 - xStart)*resourceSize;
 				playerPaint.second = resourceSize*(mapsize/2+ 1);
 			}
 
@@ -519,6 +588,8 @@ class Game{
 				yEnd = 2*mazeSize+1;
 				for (int i = 0; i < this->numEnemys; ++i)	
 					enemyPaint[i].first = (this->gamenemy[i].stateY - yStart+1)*resourceSize;
+                for (int i = 0; i < this->numPeople; ++i)   
+                    peoplePaint[i].first = (this->gamepeople[i].stateY - yStart+1)*resourceSize;
 				playerPaint.first = (ActualPlayerPint.stateY-yStart+1)*resourceSize;
 			}
 			if (ActualPlayerPint.stateX > 2*mazeSize-mapsize/2){
@@ -526,6 +597,8 @@ class Game{
 				xEnd = 2*mazeSize+1;
 				for (int i = 0; i < this->numEnemys; ++i)	
 					enemyPaint[i].second = (this->gamenemy[i].stateX+1 -xStart )*resourceSize;
+                for (int i = 0; i < this->numPeople; ++i)   
+                    peoplePaint[i].second = (this->gamepeople[i].stateX+1 -xStart )*resourceSize;
 				playerPaint.second = (ActualPlayerPint.stateX-xStart + 1)*resourceSize;
 			}
 
@@ -554,19 +627,35 @@ class Game{
 				al_draw_bitmap_region(ActualPlayerPint.left,0,0, resourceSize,  resourceSize, playerPaint.second+ Move,  playerPaint.first , 0);
 			if(ActualPlayerPint.state == 3)
 				al_draw_bitmap_region(ActualPlayerPint.right,0,0, resourceSize,  resourceSize, playerPaint.second+ Move,  playerPaint.first , 0);
+            if(NeedEnemys)  
+    			for (int i = 0; i < this->numEnemys; ++i){
+    				if(this->gamenemy[i].stateX + 1 >= xStart and this->gamenemy[i].stateX + 1 < xEnd and this->gamenemy[i].stateY + 1 >= yStart  and this->gamenemy[i].stateY + 1 <yEnd){
+    					if(gamenemy[i].state == 0)
+    						al_draw_bitmap_region(gamenemy[i].BitMap,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
+    					if(gamenemy[i].state == 1)
+    						al_draw_bitmap_region(gamenemy[i].up,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
+    					if(gamenemy[i].state == 2)
+    						al_draw_bitmap_region(gamenemy[i].left,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
+    					if(gamenemy[i].state == 3)
+    						al_draw_bitmap_region(gamenemy[i].right,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
+    				}
+    			}	
+         
+            if(NeedPeople)
+                for (int i = 0; i < this->numPeople; ++i){
+                    if(this->gamepeople[i].stateX + 1 >= xStart and this->gamepeople[i].stateX + 1 < xEnd and this->gamepeople[i].stateY + 1 >= yStart  and this->gamepeople[i].stateY + 1 <yEnd){
+                        if(gamepeople[i].state == 0)
+                            al_draw_bitmap_region(gamepeople[i].BitMap,0,0, resourceSize,  resourceSize, peoplePaint[i].second+ Move,  peoplePaint[i].first , 0);
+                        if(gamepeople[i].state == 1)
+                            al_draw_bitmap_region(gamepeople[i].up,0,0, resourceSize,  resourceSize, peoplePaint[i].second+ Move,  peoplePaint[i].first , 0);
+                        if(gamepeople[i].state == 2)
+                            al_draw_bitmap_region(gamepeople[i].left,0,0, resourceSize,  resourceSize, peoplePaint[i].second+ Move,  peoplePaint[i].first , 0);
+                        if(gamepeople[i].state == 3)
+                            al_draw_bitmap_region(gamepeople[i].right,0,0, resourceSize,  resourceSize, peoplePaint[i].second+ Move,  peoplePaint[i].first , 0);
+                    }
+                } 
 
-			for (int i = 0; i < this->numEnemys; ++i){
-				if(this->gamenemy[i].stateX + 1 >= xStart and this->gamenemy[i].stateX + 1 < xEnd and this->gamenemy[i].stateY + 1 >= yStart  and this->gamenemy[i].stateY + 1 <yEnd){
-					if(gamenemy[i].state == 0)
-						al_draw_bitmap_region(gamenemy[i].BitMap,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
-					if(gamenemy[i].state == 1)
-						al_draw_bitmap_region(gamenemy[i].up,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
-					if(gamenemy[i].state == 2)
-						al_draw_bitmap_region(gamenemy[i].left,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
-					if(gamenemy[i].state == 3)
-						al_draw_bitmap_region(gamenemy[i].right,0,0, resourceSize,  resourceSize, enemyPaint[i].second+ Move,  enemyPaint[i].first , 0);
-				}
-			}	
+
 		}
 
 		void enemyMovePaint(){
@@ -582,7 +671,7 @@ class Game{
 				yStart = gameplayer.stateY - mapsize/2;
 				yEnd = mapsize + gameplayer.stateY - mapsize/2;
 				for (int i = 0; i < this->numEnemys; ++i)	
-					enemyPaint[i].first = (this->gamenemy[i].stateY+1 - yStart)*resourceSize;
+				enemyPaint[i].first = (this->gamenemy[i].stateY+1 - yStart)*resourceSize;
 				playerPaint.first = resourceSize*(mapsize/2+ 1);
 
 			}
@@ -633,19 +722,21 @@ class Game{
 			if(gameplayer.state == 3)
 				al_draw_bitmap_region(gameplayer.right,0,0, resourceSize,  resourceSize, playerPaint.second,  playerPaint.first, 0);
 
-		
-			for (int i = 0; i < this->numEnemys; ++i){
-				if(this->gamenemy[i].stateX + 1 >= xStart and this->gamenemy[i].stateX + 1 < xEnd and this->gamenemy[i].stateY + 1 >= yStart  and this->gamenemy[i].stateY + 1 <yEnd){
-					if(gamenemy[i].state == 0)
-						al_draw_bitmap_region(gamenemy[i].BitMap,0,0, resourceSize,  resourceSize, enemyPaint[i].second,  enemyPaint[i].first-resourceSize/2, 0);
-					if(gamenemy[i].state == 1)
-						al_draw_bitmap_region(gamenemy[i].up,0,0, resourceSize,  resourceSize, enemyPaint[i].second,  enemyPaint[i].first+resourceSize/2, 0);
-					if(gamenemy[i].state == 2)
-						al_draw_bitmap_region(gamenemy[i].walkLeft,0,0, resourceSize,  resourceSize, enemyPaint[i].second+resourceSize/2,  enemyPaint[i].first, 0);
-					if(gamenemy[i].state == 3)
-						al_draw_bitmap_region(gamenemy[i].walkRight,0,0, resourceSize,  resourceSize, enemyPaint[i].second-resourceSize/2,  enemyPaint[i].first, 0);
-				}
-			}	
+		    if(NeedEnemys)  
+    			for (int i = 0; i < this->numEnemys; ++i){
+    				if(this->gamenemy[i].stateX + 1 >= xStart and this->gamenemy[i].stateX + 1 < xEnd and this->gamenemy[i].stateY + 1 >= yStart  and this->gamenemy[i].stateY + 1 <yEnd){
+    					if(gamenemy[i].state == 0)
+    						al_draw_bitmap_region(gamenemy[i].BitMap,0,0, resourceSize,  resourceSize, enemyPaint[i].second,  enemyPaint[i].first-resourceSize/2, 0);
+    					if(gamenemy[i].state == 1)
+    						al_draw_bitmap_region(gamenemy[i].up,0,0, resourceSize,  resourceSize, enemyPaint[i].second,  enemyPaint[i].first+resourceSize/2, 0);
+    					if(gamenemy[i].state == 2)
+    						al_draw_bitmap_region(gamenemy[i].walkLeft,0,0, resourceSize,  resourceSize, enemyPaint[i].second+resourceSize/2,  enemyPaint[i].first, 0);
+    					if(gamenemy[i].state == 3)
+    						al_draw_bitmap_region(gamenemy[i].walkRight,0,0, resourceSize,  resourceSize, enemyPaint[i].second-resourceSize/2,  enemyPaint[i].first, 0);
+    				}
+    			}	
+           
+
 	
 		}
 
@@ -730,7 +821,7 @@ class Game{
 		bool isEndGame(){
 
 			for (int i = 0; i < this->numEnemys; ++i)
-				if(gamenemy[i].stateX == gameplayer.stateX and  gamenemy[i].stateY == gameplayer.stateY ){
+				if(gamenemy[i].stateX == gameplayer.stateX and  gamenemy[i].stateY == gameplayer.stateY and this->NeedEnemys ){
 					return true;
 				}
 
@@ -762,25 +853,31 @@ class Game{
 				}
 				else if(ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP) {
 					if(ev.mouse.x > 451 and ev.mouse.x < 681  and ev.mouse.y >455 and ev.mouse.y < 495){
+                        al_stop_samples();
+                        al_clear_to_color(al_map_rgb(0,0,0));
+                        al_flip_display();  
 						int result = HistoryMode();
 						if(result == 0){
 							cout << "Gano felicitaciones" << endl;
 						}else if(result== 1){
-							cout << "Perdio Arcade" << endl;
+							cout << "Perdio Historia" << endl;
 						}else{
 							return;
 						}
 					}else if(ev.mouse.x > 460 and ev.mouse.x < 683  and ev.mouse.y >518 and ev.mouse.y < 560){
+                        al_stop_samples();
 						int result = multiPlayer();
 						if(result == 0){
 							cout << "Gano felicitaciones" << endl;
 						}else if(result== 1){
-							cout << "Perdio Arcade" << endl;
+							cout << "Perdio Multiplayer" << endl;
 						}else{
 							return;
 						}
 
 					}else if(ev.mouse.x > 460 and ev.mouse.x < 683  and ev.mouse.y >585 and ev.mouse.y < 626){
+                        al_stop_samples();
+                         al_flip_display();
 						int result = arcade();
 						if(result == 0){
 							cout << "Gano felicitaciones" << endl;
@@ -826,9 +923,55 @@ class Game{
 			al_stop_samples();
 		}
 		int  HistoryMode(){
+            
+			this->playVideo(this->Open);
+            for(int i = 0; i < 3; ++i){
+                
 
+            }
+
+			return 0;
 
 		}
+        void PlayNivel(int nivel){
+
+
+           /* if(nivel == 0){
+
+
+            }else(nivel == 1){
+
+
+
+            }if(nivel == 2){
+
+
+            }*/
+
+
+        }
+        void playVideo(ALLEGRO_VIDEO *Video){
+
+
+            al_start_video(Video, al_get_default_mixer());
+            al_resize_display(this->display ,al_get_video_scaled_width(Video), al_get_video_scaled_height(Video));
+           
+            ALLEGRO_BITMAP * bitmap;
+            while(al_is_video_playing(Video)){
+                bitmap = al_get_video_frame(Video);
+
+                if(bitmap)
+                    al_draw_bitmap(bitmap, 0, 0, 0);
+               
+                
+                al_flip_display();
+                al_rest(0.01);
+            }
+        
+            al_destroy_bitmap(bitmap);
+            al_resize_display(this->display, mapsize*resourceSize, mapsize*resourceSize);
+
+        }
 
 		int  multiPlayer(){
 			al_resize_display(this->display,2*al_get_display_width(this->display), al_get_display_height(this->display));
@@ -847,7 +990,7 @@ class Game{
 				}else if(ev.type == ALLEGRO_EVENT_TIMER) {
 					
 					if(this->winnigGame()){
-						restarGame();
+						restarGame(mapsize,2,0,false,true, rand()%3);
 					}
 
 					if(this->isEndGame()){
@@ -884,12 +1027,12 @@ class Game{
 		}
 
 		int  arcade(){
-
+            
 			al_start_timer(this->timer);
 			al_clear_to_color(al_map_rgb(0,0,0));
 			this->PaintMap(0, this->gameplayer);
 			al_flip_display();	
-
+            int times = 0;
 			while(true){
 				ALLEGRO_EVENT ev;
 				
@@ -897,48 +1040,164 @@ class Game{
 				if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 					return 2;
 				}else if(ev.type == ALLEGRO_EVENT_TIMER) {
-					
+					   
+      
 					if(this->winnigGame()){
-						restarGame();
+                        times++;
+						restarGame(mapsize + 2*times,2,4,true,false, rand()%3);
 					}
 
 					if(this->isEndGame()){
 						return 1;
 					}
-					this->EnemysMove();
+					if(this->NeedEnemys)
+                        this->EnemysMove();
+                     
+				    if(this->NeedPeople){
+                        this->PeopleMove();
+                        PeopleChange();
+                    }
 
-				
 					//this->enemyMovePaint();
 					
-					al_flip_display();
+					//al_flip_display();
 					//al_rest(0.05);	
 					this->PaintMap(0, this->gameplayer);
+
 					al_flip_display();	
 					
 
 				}if(ev.type == ALLEGRO_EVENT_KEY_DOWN) {
 
 					this->gameplayer.moveAnimation(ev);
+
+                    if(this->NeedPeople)
+                        PeopleChange();
 					
 					//this->playerMovePaint();
-					al_flip_display();
+					//al_flip_display();
 					//al_rest(0.05);	
 					this->PaintMap(0, this->gameplayer);
 					al_flip_display();	
 						
-					this->recalculateEnemysMove();
+					if(this->NeedEnemys)
+                        this->recalculateEnemysMove();
 				}
 			}
 		}
 
-		void restarGame(){
+		void restarGame(int mapsize, int numEnemys, int numPeople, bool needPeople, bool NeedEnemys, int set){
 
-			this->maze.restarMaze();
+			this->maze.initMaze(mapsize, numEnemys, numPeople);
+            this->maze.MakeMaze();
 			this->gameplayer.setCord(this->maze.playerCord);
-
+            map = this->maze.getMaze();
+            this->numEnemys = numEnemys;
+            this->numPeople = numPeople;
+            this->NeedPeople = needPeople;
+            this->NeedEnemys = NeedEnemys;
+            if(!initAssets(set))
+                cout << "error con assets";
 			for(int i =0;i<numEnemys; i++)
 				this->gamenemy[i].setCord(maze.enemysCord[i]);
+            for(int i =0;i<numPeople; i++)
+                this->gamepeople[i].setCord(maze.peopleCord[i]);
 		}
+
+        bool initAssets(int set){
+
+            string wallPath,graundPath,openPath;
+
+            if(set == 0){
+                wallPath = "./Resources/PrimerNivel/Arbusto.png";
+                graundPath = "./Resources/PrimerNivel/piso.png";
+                openPath = "./Resources/Cortos/open.ogv";
+            }else if(set==1){
+                wallPath = "./Resources/PrimerNivel/Arbusto.png";
+                graundPath = "./Resources/PrimerNivel/piso.png";
+                openPath = "./Resources/Cortos/open.ogv";
+
+            }else{
+                wallPath = "./Resources/PrimerNivel/Arbusto.png";
+                graundPath = "./Resources/PrimerNivel/piso.png";
+                openPath = "./Resources/Cortos/open.ogv";
+            }
+            this->wall = al_load_bitmap(wallPath.c_str());
+            if(!this->wall) {
+                fprintf(stderr, "failed to create wall bitmap!\n");
+                this->Clean();
+
+                return false;
+            }
+            this->graund = al_load_bitmap(graundPath.c_str());
+            if(!this->graund) {
+                fprintf(stderr, "failed to create graund bitmap!\n");
+                this->Clean();
+                return false;
+            }
+            this->Open = al_open_video(openPath.c_str());
+            if(!this->Open) {
+                fprintf(stderr, "failed to create Video open!\n");
+                
+                this->Clean();
+                return false;
+            }          
+            this->gameplayer.changeState(set);
+            this->gameplayer.setCord(this->maze.playerCord);
+            if(!this->gameplayer.BitMap) {
+                fprintf(stderr, "failed to create player bitmap!\n");
+                this->Clean();
+                return false;
+            }
+
+            this->gameMulti.changeState(set);
+            this->gameMulti.type = false;
+            this->gameMulti.setCord(this->maze.playerCord);
+            if(!this->gameMulti.BitMap) {
+                fprintf(stderr, "failed to create multi player bitmap!\n");
+                this->Clean();
+                return false;
+            }
+
+            this->gamenemy = new gameEnemy[numEnemys];
+            for(int i =0;i<numEnemys; i++){
+                this->gamenemy[i].changeState(set);
+                this->gamenemy[i].setCord(maze.enemysCord[i]);
+                this->gamenemy[i].rad = 3;
+                if(!this->gamenemy[i].BitMap) {
+                    
+                    fprintf(stderr, "failed to create enemy bitmap!\n");
+                    this->Clean();
+                    return false;
+                }
+            }
+
+            for(int i =0;i<numPeople; i++){
+                if(i == 0)
+                    if(i == 0)
+                        this->gamepeople[i].dent = "P1";
+                    if(i == 1)
+                        this->gamepeople[i].dent = "P2";
+                    if(i == 2)
+                        this->gamepeople[i].dent = "P3";
+                    if(i == 3)
+                        this->gamepeople[i].dent = "P3";
+
+                this->gamepeople[i].changeState();
+                this->gamepeople[i].setCord(maze.peopleCord[i]);
+                //cout << this->gamepeople[i].stateX << " " <<  this->gamepeople[i].stateY << endl;
+                if(!this->gamepeople[i].BitMap) {
+                    
+                    fprintf(stderr, "failed to create people bitmap!\n");
+                    this->Clean();
+                    return false;
+                }
+            }
+
+            return true;
+
+
+        } 
 
 
 };

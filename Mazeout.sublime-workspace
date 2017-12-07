@@ -4,6 +4,30 @@
 		"selected_items":
 		[
 			[
+				"wa",
+				"walkRight"
+			],
+			[
+				"Me",
+				"Menu"
+			],
+			[
+				"M",
+				"MenuArcade"
+			],
+			[
+				"gr",
+				"graund"
+			],
+			[
+				"ev",
+				"event_queue"
+			],
+			[
+				"o",
+				"Open"
+			],
+			[
 				"sta",
 				"stateY"
 			],
@@ -22,10 +46,6 @@
 			[
 				"ga",
 				"gameplayer"
-			],
-			[
-				"wa",
-				"walkLeft"
 			],
 			[
 				"me",
@@ -148,10 +168,6 @@
 				"ArcStart"
 			],
 			[
-				"gr",
-				"graphMap"
-			],
-			[
 				"ge",
 				"get_curr"
 			],
@@ -270,10 +286,6 @@
 			[
 				"r",
 				"rigth"
-			],
-			[
-				"Me",
-				"mazeSize"
 			],
 			[
 				"s",
@@ -502,18 +514,6 @@
 			[
 				"bor",
 				"border-radius\tstyl"
-			],
-			[
-				"bac",
-				"background-color\tstyl"
-			],
-			[
-				"pa",
-				"padding\tstyl"
-			],
-			[
-				"ba",
-				"background-size\tstyl"
 			]
 		]
 	},
@@ -523,7 +523,7 @@
 			"file": "MazeGenerator/maze.h",
 			"settings":
 			{
-				"buffer_size": 4593,
+				"buffer_size": 4619,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -532,7 +532,7 @@
 			"file": "MazeOut.cpp",
 			"settings":
 			{
-				"buffer_size": 1699,
+				"buffer_size": 611,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -541,7 +541,16 @@
 			"file": "MazeGenerator/GameDefine.h",
 			"settings":
 			{
-				"buffer_size": 24859,
+				"buffer_size": 27257,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Makefile",
+			"settings":
+			{
+				"buffer_size": 908,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -712,9 +721,9 @@
 	},
 	"expanded_folders":
 	[
-		"/home/mator/programacion/c++/Ayda/MazeOut",
-		"/home/mator/programacion/c++/Ayda/MazeOut/MazeGenerator",
-		"/home/mator/programacion/c++/Ayda/MazeOut/Resources"
+		"/home/mator/programacion/c++/Ayda/Proyecto/MazeOut",
+		"/home/mator/programacion/c++/Ayda/Proyecto/MazeOut/Resources",
+		"/home/mator/programacion/c++/Ayda/Proyecto/MazeOut/Resources/Cortos"
 	],
 	"file_history":
 	[
@@ -863,6 +872,8 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"Open",
+			"5.0",
 			"stateX",
 			"second",
 			"state",
@@ -963,15 +974,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4593,
+						"buffer_size": 4619,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1160,
-								1160
+								3339,
+								3339
 							]
 						],
 						"settings":
@@ -980,7 +991,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 832.0,
+						"translation.y": 48.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
@@ -992,15 +1003,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1699,
+						"buffer_size": 611,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								127,
-								127
+								611,
+								611
 							]
 						],
 						"settings":
@@ -1009,7 +1020,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 240.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -1021,15 +1032,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 24859,
+						"buffer_size": 27257,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2524,
-								2524
+								4747,
+								4747
 							]
 						],
 						"settings":
@@ -1038,7 +1049,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1283.0,
+						"translation.y": 11909.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -1046,6 +1057,34 @@
 				},
 				{
 					"buffer": 3,
+					"file": "Makefile",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 908,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								512,
+								512
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Makefile/Makefile.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
 					"file": "MazeGenerator/Define.h",
 					"semi_transient": false,
 					"settings":
@@ -1073,7 +1112,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 5,
 					"file": "MazeGenerator/GraphUtility.h",
 					"semi_transient": false,
 					"settings":
@@ -1085,8 +1124,8 @@
 						"selection":
 						[
 							[
-								2972,
-								3005
+								1433,
+								1433
 							]
 						],
 						"settings":
@@ -1095,14 +1134,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 336.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 6,
 					"file": "MazeGenerator/GraphDefine.H",
 					"semi_transient": false,
 					"settings":
@@ -1126,7 +1165,7 @@
 						"translation.y": 48.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 6,
 					"type": "text"
 				}
 			]
@@ -1501,7 +1540,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 430.0,
+	"side_bar_width": 240.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

@@ -5,17 +5,18 @@
 class Maze{
 	public:
 		pair<int,int> *enemysCord;
-		pair<int,int> playerCord;
-		int numEnemys;
+		pair<int,int> playerCord, peopleCord[4],ObjectsCord[5];
+		int numEnemys, numPeople, numObjects;
 		pair<int, int> endCord;
 
 		Maze(){}
 
-		void initMaze(int mapSize, int numEnemys){
+		void initMaze(int mapSize, int numEnemys, int numPeople, int numObjects){
 			this->numEnemys = numEnemys;
 			this->mapSize = mapSize;
+			this->numPeople = numPeople;
+			this->numObjects = numObjects;
 			enemysCord = new pair<int, int>[this->numEnemys];
-	
 			InitMap();	
 			InitGraph();
 			initCord();
@@ -28,6 +29,10 @@ class Maze{
 
 			for(int i = 0; i< numEnemys ; i++)
 				this->enemysCord[i] = make_pair(2*(rand() % this->graphMap->get_num_nodes()), 2*(rand() % this->graphMap->get_num_nodes()));
+			for(int i = 0; i< this->numPeople ; i++)
+				this->peopleCord[i] = make_pair(2*(rand() % this->graphMap->get_num_nodes()), 2*(rand() % this->graphMap->get_num_nodes()));
+			for(int i = 0; i< this->numObjects ; i++)
+				this->peopleCord[i] = make_pair(2*(rand() % this->graphMap->get_num_nodes()), 2*(rand() % this->graphMap->get_num_nodes()));
 
 		};
 
@@ -148,6 +153,7 @@ class Maze{
 			}
 			delete[] this->map;
 			clear_graph(*this->graphMap);
+			delete this->graphMap;
 			delete this->enemysCord;
 		}
 
