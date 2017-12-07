@@ -357,7 +357,7 @@ class Game{
 		Maze maze;
 		ALLEGRO_DISPLAY *display;
 		ALLEGRO_BITMAP *wall, *graund, *Menu, *MenuJugar,  *MenuArcade, *MenuMultiplayer, *MenuSalir;
-        ALLEGRO_BITMAP *Loss, *win;
+        ALLEGRO_BITMAP *Loss, *win, *Win1 ,*Win2;
 		gamePlayer gameplayer, gameMulti;
 		gameEnemy *gamenemy;
         gamePeople gamepeople[8];
@@ -395,6 +395,14 @@ class Game{
 				al_destroy_bitmap(this->MenuJugar);
 			if(this->Menu)
 				al_destroy_bitmap(this->Menu);
+            if(this->Win1)
+                al_destroy_bitmap(this->Win1);
+            if(this->Win2)
+                al_destroy_bitmap(this->Win2);
+            if(this->win)
+                al_destroy_bitmap(this->win);
+            if(this->Loss)
+                al_destroy_bitmap(this->Loss);
 			if(this->Open)
 				al_close_video(this->Open);
 			if(this->gotera)
@@ -956,8 +964,22 @@ class Game{
             }
 
             if(NeedPeople){
-                if(!this->PeopleLeft != 0 and !multiPlayerstate)
+                if(this->PeopleLeft != 0 and !multiPlayerstate)
                     return 0;
+
+            }
+
+            if(multiPlayerstate){
+
+                if(this->PeopleLeft == 0 and this->gameObject.is_ready())
+                   map[ maze.endCord.first+1][maze.endCord.second-1] = ' ';
+                if(this->PeopleLeftMulti == 0 and this->gameObject.is_readyMult())
+                    map[ maze.endCord.first+1][maze.endCord.second-1] = ' ';
+                if(this->gameplayer.stateY == this->maze.endCord.first and this->gameplayer.stateX +1== this->maze.endCord.second-1)
+                    return 1;
+                if(this->gameMulti.stateY == this->maze.endCord.first and this->gameMulti.stateX +1== this->maze.endCord.second-1)
+                    return 2;
+                return 0;
 
             }
             cout << maze.endCord.first << " " << maze.endCord.second -1<< endl;
@@ -1066,7 +1088,7 @@ class Game{
 			
             for(int i = 0; i < 2; ++i){
                 initAssets(i);
-                //this->playVideo(this->Open);
+                this->playVideo(this->Open);
                 int result = this->playGame(0,i);
                 if(result == 1){
                     al_draw_bitmap(Loss, 0, 0, 0);
@@ -1127,6 +1149,7 @@ class Game{
                 this->PaintMap(resourceSize * mapsize, this->gameMulti);
             al_flip_display();  
             int times = 0;
+            int result;
             while(true){
                 ALLEGRO_EVENT ev;
                 
@@ -1135,16 +1158,54 @@ class Game{
                     return 2;
                 }else if(ev.type == ALLEGRO_EVENT_TIMER) {
                        
-      
-                    if(this->winnigGame(type ==1)){
-                       
+                    result = this->winnigGame(type ==1);
+                    if(result >0){
+                        
                         if(type ==2){
                             restarGame(mapsize+2*times,2,4,10, 1 == rand()%2,1 == rand()%2,1 == rand()%2,rand()%2); 
                             times++;
+                        }else if(type == 1){
+
+                            if(result == 1){
+
+                                al_draw_bitmap(Win1, 0, 0, 0);
+                                al_flip_display();
+                                while(true){
+                                    ALLEGRO_EVENT ev;
+                                    al_wait_for_event(this->event_queue, &ev);
+
+                                    if (ev.type == ALLEGRO_EVENT_KEY_DOWN){
+                                        if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER)
+                                            break;
+                                    }
+
+
+                                }
+                               
+                            }else{
+
+                                al_draw_bitmap(Win2, 0, 0, 0);
+                                al_flip_display();
+                                while(true){
+                                    ALLEGRO_EVENT ev;
+                                    al_wait_for_event(this->event_queue, &ev);
+
+                                    if (ev.type == ALLEGRO_EVENT_KEY_DOWN){
+                                        if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER)
+                                            break;
+                                    }
+
+
+                                } 
+                            }
+                            return 0;
+                        }else{
+                           return 0; 
                         }
-                        return 0;
+                        
                     }
 
+                    
                     if(this->isEndGame()){
                         return 1;
                     }
@@ -1166,16 +1227,102 @@ class Game{
                     if(type == 1)
                         this->PaintMap(resourceSize * mapsize, this->gameMulti);
                     al_flip_display();  
-                    
-
-                }if(ev.type == ALLEGRO_EVENT_KEY_DOWN) {
-                     if(this->winnigGame(type ==1)){
-                       
+                    result = this->winnigGame(type ==1);
+                    if(result >0){
+                        
                         if(type ==2){
                             restarGame(mapsize+2*times,2,4,10, 1 == rand()%2,1 == rand()%2,1 == rand()%2,rand()%2); 
                             times++;
+                        }else if(type == 1){
+
+                            if(result == 1){
+
+                                al_draw_bitmap(Win1, 0, 0, 0);
+                                al_flip_display();
+                                while(true){
+                                    ALLEGRO_EVENT ev;
+                                    al_wait_for_event(this->event_queue, &ev);
+
+                                    if (ev.type == ALLEGRO_EVENT_KEY_DOWN){
+                                        if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER)
+                                            break;
+                                    }
+
+
+                                }
+                               
+                            }else{
+
+                                al_draw_bitmap(Win2, 0, 0, 0);
+                                al_flip_display();
+                                while(true){
+                                    ALLEGRO_EVENT ev;
+                                    al_wait_for_event(this->event_queue, &ev);
+
+                                    if (ev.type == ALLEGRO_EVENT_KEY_DOWN){
+                                        if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER)
+                                            break;
+                                    }
+
+
+                                } 
+                            }
+                            return 0;
+                        }else{
+                           return 0; 
                         }
-                        return 0;
+                        
+                    }
+
+                    
+
+                }if(ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+                     
+                    result = this->winnigGame(type ==1);
+                    if(result >0){
+                        
+                        if(type ==2){
+                            restarGame(mapsize+2*times,2,4,10, 1 == rand()%2,1 == rand()%2,1 == rand()%2,rand()%2); 
+                            times++;
+                        }else if(type == 1){
+
+                            if(result == 1){
+
+                                al_draw_bitmap(Win1, 0, 0, 0);
+                                al_flip_display();
+                                while(true){
+                                    ALLEGRO_EVENT ev;
+                                    al_wait_for_event(this->event_queue, &ev);
+
+                                    if (ev.type == ALLEGRO_EVENT_KEY_DOWN){
+                                        if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER)
+                                            break;
+                                    }
+
+
+                                }
+                               
+                            }else{
+
+                                al_draw_bitmap(Win2, 0, 0, 0);
+                                al_flip_display();
+                                while(true){
+                                    ALLEGRO_EVENT ev;
+                                    al_wait_for_event(this->event_queue, &ev);
+
+                                    if (ev.type == ALLEGRO_EVENT_KEY_DOWN){
+                                        if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER)
+                                            break;
+                                    }
+
+
+                                } 
+                            }
+                            return 0;
+                        }else{
+                           return 0; 
+                        }
+                        
                     }
 
                     if(this->isEndGame()){
@@ -1201,14 +1348,53 @@ class Game{
                     if(type == 1)
                         this->PaintMap(resourceSize * mapsize, this->gameMulti);
                     al_flip_display();  
-                    if(this->winnigGame(type ==1)){
-                       
+                    int result = this->winnigGame(type ==1);
+                    if(result >0){
+                        
                         if(type ==2){
                             restarGame(mapsize+2*times,2,4,10, 1 == rand()%2,1 == rand()%2,1 == rand()%2,rand()%2); 
                             times++;
+                        }else if(type == 1){
+
+                            if(result == 1){
+
+                                al_draw_bitmap(Win1, 0, 0, 0);
+                                al_flip_display();
+                                while(true){
+                                    ALLEGRO_EVENT ev;
+                                    al_wait_for_event(this->event_queue, &ev);
+
+                                    if (ev.type == ALLEGRO_EVENT_KEY_DOWN){
+                                        if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER)
+                                            break;
+                                    }
+
+
+                                }
+                               
+                            }else{
+
+                                al_draw_bitmap(Win2, 0, 0, 0);
+                                al_flip_display();
+                                while(true){
+                                    ALLEGRO_EVENT ev;
+                                    al_wait_for_event(this->event_queue, &ev);
+
+                                    if (ev.type == ALLEGRO_EVENT_KEY_DOWN){
+                                        if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER)
+                                            break;
+                                    }
+
+
+                                } 
+                            }
+                            return 0;
+                        }else{
+                           return 0; 
                         }
-                        return 0;
+                        
                     }
+
                     if(this->NeedEnemys)
                         this->recalculateEnemysMove();
                 }
@@ -1297,21 +1483,21 @@ class Game{
                 wallPath = "./Resources/PrimerNivel/Arbusto.png";
                 graundPath = "./Resources/PrimerNivel/piso.png";
                 openPath = "./Resources/Cortos/open.ogv";
-                losePath = "./Resources/PrimerNivel/Lost_lvl1.png";
-                winPath = "./Resources/PrimerNivel/Victory_lvl1.png";
+                losePath = "./Resources/Fondos/Lost_lvl1.png";
+                winPath = "./Resources/Fondos/Victory_lvl1.png";
             }else if(set==1){
                 wallPath = "./Resources/SegundoNivel/wall.png";
                 graundPath = "./Resources/SegundoNivel/graund.png";
                 openPath = "./Resources/Cortos/Level2.ogv";
-                losePath = "./Resources/PrimerNivel/Lost_lvl1.png";
-                winPath = "./Resources/PrimerNivel/Victory_lvl1.png";
+                losePath = "./Resources/Fondos/Lost_lvl2.png";
+                winPath = "./Resources/Fondos/Victory_lvl2.png";
 
             }else{
                 wallPath = "./Resources/PrimerNivel/Arbusto.png";
                 graundPath = "./Resources/PrimerNivel/piso.png";
                 openPath = "./Resources/Cortos/open.ogv";
-                losePath = "./Resources/PrimerNivel/Lost_lvl1.png";
-                winPath = "./Resources/PrimerNivel/Victory_lvl1.png";
+                losePath = "./Resources/Fondos/Lost_lvl1.png";
+                winPath = "./Resources/Fondos/Victory_lvl1.png";
             }
 
             this->wall = al_load_bitmap(wallPath.c_str());
@@ -1335,6 +1521,18 @@ class Game{
             }
             this->win = al_load_bitmap(winPath.c_str());
             if(!this->win) {
+                fprintf(stderr, "failed to create graund bitmap!\n");
+                this->Clean();
+                return false;
+            }
+            this->Win1 = al_load_bitmap("./Resources/Fondos/multiplayer_1.png");
+            if(!this->Win1) {
+                fprintf(stderr, "failed to create graund bitmap!\n");
+                this->Clean();
+                return false;
+            }
+            this->Win2 = al_load_bitmap("./Resources/Fondos/multiplayer_2.png");
+            if(!this->Win2) {
                 fprintf(stderr, "failed to create graund bitmap!\n");
                 this->Clean();
                 return false;
