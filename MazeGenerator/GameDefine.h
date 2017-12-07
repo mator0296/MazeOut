@@ -291,26 +291,27 @@ class gamePeople: public gameEntity{
 
 class Objects{
 public:
-    ALLEGRO_BITMAP *C1,*C2,*C3,*C4,*C5;
-    pair<int, int> ObjectCord[5];
+    ALLEGRO_BITMAP *C[5];
+    bool taken[5];
+    pair<int, int> ObjectsCord[5];
     int HowLeft;
     Objects(){
-        C1 = al_load_bitmap("./Resources/SegundoNivel/C1.png");
-        C2 = al_load_bitmap("./Resources/SegundoNivel/C2.png");
-        C3 = al_load_bitmap("./Resources/SegundoNivel/C3.png");
-        C4 = al_load_bitmap("./Resources/SegundoNivel/C4.png");
-        C5 = al_load_bitmap("./Resources/SegundoNivel/C5.png");
-        HowLeft = 5;
-        if(!C1 || !C2 || !C3 ||!C4 ||!C5){
-            cout << "bitmap object no listo" << endl;
 
+        for (int i = 1; i < 6; ++i){
+            C[i-1] = al_load_bitmap(("./Resources/SegundoNivel/C"+to_string(i)+".png").c_str());
+            if(!C[i-1])
+                cout << "bitmap object no listo"<<  "./Resources/SegundoNivel/C"+to_string(i)+".png"<< endl;
+            taken[i-1] = false;
         }
+       
+        HowLeft = 5;
+       
 
     }
 
     void setObjectsCord(pair<int,int> cord[]){
         for(int i=0 ;i<5;i++)
-            ObjectCord[i] = cord[i];
+            ObjectsCord[i] = cord[i];
     }
 
     void find_object(){
@@ -322,11 +323,9 @@ public:
         return (HowLeft == 0);
     }
     ~Objects(){
-        al_destroy_bitmap(C1);
-        al_destroy_bitmap(C2);
-        al_destroy_bitmap(C3);
-        al_destroy_bitmap(C4);
-        al_destroy_bitmap(C5);
+        for (int i = 1; i < 6; ++i)
+            al_destroy_bitmap(C[i]);
+        
     }
 
     
@@ -337,10 +336,10 @@ class Game{
 	public:
 		int FPS = 2;
 		int numEnemys;
-		int numPeople;
+		int numPeople,numObjects;
         bool NeedPeople;
-        bool NeedEnemys;
-        Objects object;
+        bool NeedEnemys, NeedObjects;
+        Objects gameObject;
 		Maze maze;
 		ALLEGRO_DISPLAY *display;
 		ALLEGRO_BITMAP *wall, *graund, *Menu, *MenuJugar,  *MenuArcade, *MenuMultiplayer, *MenuSalir;
@@ -423,6 +422,8 @@ class Game{
 		bool init(int NumEnemys){
 			this->numEnemys = NumEnemys;
 			this->numPeople = 4;
+            this->numObjects = 5;
+            this->NeedObjects = true;
             this->NeedEnemys = false;
             this->NeedPeople = true;
             srand (time(NULL));
@@ -461,7 +462,7 @@ class Game{
 				return false;
 			}
 			
-			this->maze.initMaze(mazeSize, numEnemys, numPeople);
+			this->maze.initMaze(mazeSize, numEnemys, numPeople, numObjects);
 			this->maze.MakeMaze();
 
 
@@ -552,13 +553,15 @@ class Game{
 
 			int xStart =0, xEnd = mapsize, yStart=0, yEnd = mapsize;
 			pair<int, int> playerPaint = make_pair((ActualPlayerPint.stateY+1)*resourceSize,(ActualPlayerPint.stateX+1)*resourceSize); 
-			pair<int, int> enemyPaint[6];
+			pair<int, int> enemyPaint[6], objectPaints[5];
             pair<int, int> peoplePaint[4];
 
 			for (int i = 0; i < this->numEnemys; ++i)
 				enemyPaint[i] = make_pair((this->gamenemy[i].stateY+1)*resourceSize,(this->gamenemy[i].stateX+1)*resourceSize); 
             for (int i = 0; i < this->numPeople; ++i)
                 peoplePaint[i] = make_pair((this->gamepeople[i].stateY+1)*resourceSize,(this->gamepeople[i].stateX+1)*resourceSize); 
+            for (int i = 0; i < this->numObjects; ++i)
+                objectPaints[i] = make_pair((this->gameObject.ObjectsCord[i].first+1)*resourceSize,(this->gameObject.ObjectsCord[i].second+1)*resourceSize); 
 
 			if(ActualPlayerPint.stateY > mapsize/2 ){
 
@@ -568,6 +571,8 @@ class Game{
 					enemyPaint[i].first = (this->gamenemy[i].stateY+1 - yStart)*resourceSize;
                 for (int i = 0; i < this->numPeople; ++i)   
                     peoplePaint[i].first = (this->gamepeople[i].stateY+1 - yStart)*resourceSize;
+                for (int i = 0; i < this->numObjects; ++i)   
+                    objectPaints[i].first = (this->gameObject.ObjectsCord[i].first+1 - yStart)*resourceSize;
 				playerPaint.first = resourceSize*(mapsize/2+ 1);
 
 			}
@@ -580,6 +585,9 @@ class Game{
 					enemyPaint[i].second = (this->gamenemy[i].stateX+1 - xStart)*resourceSize;
                 for (int i = 0; i < this->numPeople; ++i)   
                     peoplePaint[i].second = (this->gamepeople[i].stateX+1 - xStart)*resourceSize;
+                for (int i = 0; i < this->numObjects; ++i)   
+                    peoplePaint[i].second = (this->gameObject.ObjectsCord[i].second+1 - xStart)*resourceSize;
+                
 				playerPaint.second = resourceSize*(mapsize/2+ 1);
 			}
 
@@ -590,6 +598,8 @@ class Game{
 					enemyPaint[i].first = (this->gamenemy[i].stateY - yStart+1)*resourceSize;
                 for (int i = 0; i < this->numPeople; ++i)   
                     peoplePaint[i].first = (this->gamepeople[i].stateY - yStart+1)*resourceSize;
+                for (int i = 0; i < this->numObjects; ++i)   
+                    peoplePaint[i].first = (this->gameObject.ObjectsCord[i].first - yStart+1)*resourceSize;
 				playerPaint.first = (ActualPlayerPint.stateY-yStart+1)*resourceSize;
 			}
 			if (ActualPlayerPint.stateX > 2*mazeSize-mapsize/2){
@@ -599,6 +609,8 @@ class Game{
 					enemyPaint[i].second = (this->gamenemy[i].stateX+1 -xStart )*resourceSize;
                 for (int i = 0; i < this->numPeople; ++i)   
                     peoplePaint[i].second = (this->gamepeople[i].stateX+1 -xStart )*resourceSize;
+                for (int i = 0; i < this->numObjects; ++i)   
+                    peoplePaint[i].second = (this->gameObject.ObjectsCord[i].second+1 -xStart )*resourceSize;
 				playerPaint.second = (ActualPlayerPint.stateX-xStart + 1)*resourceSize;
 			}
 
@@ -655,7 +667,13 @@ class Game{
                     }
                 } 
 
-
+            if(NeedObjects)
+                for (int i = 0; i < this->numObjects; ++i){
+                    if(this->gameObject.ObjectsCord[i].second + 1 >= xStart and this->gameObject.ObjectsCord[i].second + 1 < xEnd and this->gameObject.ObjectsCord[i].first + 1 >= yStart  and this->gameObject.ObjectsCord[i].first + 1 <yEnd){
+                            if(!gameObject.taken[i])
+                                al_draw_bitmap_region(gameObject.C[i],0,0, resourceSize,  resourceSize, peoplePaint[i].second+ Move,  peoplePaint[i].first , 0);
+                    }
+                } 
 		}
 
 		void enemyMovePaint(){
@@ -735,9 +753,6 @@ class Game{
     						al_draw_bitmap_region(gamenemy[i].walkRight,0,0, resourceSize,  resourceSize, enemyPaint[i].second-resourceSize/2,  enemyPaint[i].first, 0);
     				}
     			}	
-           
-
-	
 		}
 
 		void playerMovePaint(){
@@ -990,7 +1005,7 @@ class Game{
 				}else if(ev.type == ALLEGRO_EVENT_TIMER) {
 					
 					if(this->winnigGame()){
-						restarGame(mapsize,2,0,false,true, rand()%3);
+						restarGame(mapsize,2,0,5,false,true,true, rand()%3);
 					}
 
 					if(this->isEndGame()){
@@ -1044,7 +1059,7 @@ class Game{
       
 					if(this->winnigGame()){
                         times++;
-						restarGame(mapsize + 2*times,2,4,true,false, rand()%3);
+						restarGame(mapsize + 2*times,2,4,5,true,false,true, rand()%3);
 					}
 
 					if(this->isEndGame()){
@@ -1086,16 +1101,18 @@ class Game{
 			}
 		}
 
-		void restarGame(int mapsize, int numEnemys, int numPeople, bool needPeople, bool NeedEnemys, int set){
+		void restarGame(int mapsize, int numEnemys, int numPeople,int numObjects, bool needPeople, bool NeedEnemys, bool needObjects , int set){
 
-			this->maze.initMaze(mapsize, numEnemys, numPeople);
+			this->maze.initMaze(mapsize, numEnemys, numPeople, numObjects);
             this->maze.MakeMaze();
 			this->gameplayer.setCord(this->maze.playerCord);
             map = this->maze.getMaze();
             this->numEnemys = numEnemys;
             this->numPeople = numPeople;
+            this->numObjects = numObjects;
             this->NeedPeople = needPeople;
             this->NeedEnemys = NeedEnemys;
+            this->NeedObjects = needObjects;
             if(!initAssets(set))
                 cout << "error con assets";
 			for(int i =0;i<numEnemys; i++)
@@ -1122,6 +1139,7 @@ class Game{
                 graundPath = "./Resources/PrimerNivel/piso.png";
                 openPath = "./Resources/Cortos/open.ogv";
             }
+
             this->wall = al_load_bitmap(wallPath.c_str());
             if(!this->wall) {
                 fprintf(stderr, "failed to create wall bitmap!\n");
@@ -1142,6 +1160,8 @@ class Game{
                 this->Clean();
                 return false;
             }          
+
+            this->gameObject.setObjectsCord(this->maze.ObjectsCord);
             this->gameplayer.changeState(set);
             this->gameplayer.setCord(this->maze.playerCord);
             if(!this->gameplayer.BitMap) {

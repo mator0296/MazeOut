@@ -32,7 +32,7 @@ class Maze{
 			for(int i = 0; i< this->numPeople ; i++)
 				this->peopleCord[i] = make_pair(2*(rand() % this->graphMap->get_num_nodes()), 2*(rand() % this->graphMap->get_num_nodes()));
 			for(int i = 0; i< this->numObjects ; i++)
-				this->peopleCord[i] = make_pair(2*(rand() % this->graphMap->get_num_nodes()), 2*(rand() % this->graphMap->get_num_nodes()));
+				this->ObjectsCord[i] = make_pair(2*(rand() % this->graphMap->get_num_nodes()), 2*(rand() % this->graphMap->get_num_nodes()));
 
 		};
 
